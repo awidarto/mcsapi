@@ -1,11 +1,59 @@
-<script src="http://maps.google.com/maps/api/js?sensor=false" type="text/javascript"></script>
-<?php echo $this->ag_asset->load_script('gmap3.min.js');?>
+<link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.6.4/leaflet.css" />
+ <!--[if lte IE 8]>
+     <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.6.4/leaflet.ie.css" />
+ <![endif]-->
+
+<?php echo $this->ag_asset->load_css('font-awesome.min.css');?>
+<?php echo $this->ag_asset->load_css('leaflet.awesome-markers.css');?>
+
+<script src="http://cdn.leafletjs.com/leaflet-0.6.4/leaflet.js"></script>
+
+<?php echo $this->ag_asset->load_script('leaflet.awesome-markers.min.js');?>
+<?php echo $this->ag_asset->load_script('leaflet.polylineDecorator.min.js');?>
+
+
+<style type="text/css">
+.awesome-marker i {
+    color: #333;
+    margin-top: 2px;
+    display: inline-block;
+    font-size: 10px;
+}
+</style>
 
 <script>
 	var asInitVals = new Array();
 	//var locdata = <?php //print $locdata;?>;
-	
+
+    CM_ATTRIB = 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, ' +
+            '<a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
+            'Imagery © <a href="http://cloudmade.com">CloudMade</a>';
+
+    CM_URL = 'http://{s}.tile.cloudmade.com/bc43265d42be42e3bfd603f12a8bf0e9/997/256/{z}/{x}/{y}.png';
+
+    OSM_URL = 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
+    OSM_ATTRIB = '&copy; <a href="http://openstreetmap.org/copyright">OpenStreetMap</a> contributors';
+
 	$(document).ready(function() {
+
+        var map = L.map('map').setView([-6.17742,106.828308], 12);
+
+        var lineWeight = 4;
+
+        L.tileLayer(OSM_URL, {
+            attribution: OSM_ATTRIB,
+            maxZoom: 18
+        }).addTo(map);
+
+        $('#lineWeight').on('change',function(){
+            refreshMap();
+        });
+
+        var lg;
+        var icsize = new L.Point(19,47);
+        var icanchor = new L.Point(9,20);
+        var shanchor = new L.Point(4,5);
+        /*
 		$('#map').gmap3({
 			action:'init',
 			options:{
@@ -13,10 +61,37 @@
 			      zoom: 11
 			    }
 		});
+        */
+
+        var markers = [];
+        var paths = [];
 
 		function refreshMap(){
 			var currtime = new Date();
+            lineWeight = $('#lineWeight').val();
 			//console.log(currtime.getTime());
+
+            var icon_yellow = L.AwesomeMarkers.icon({
+                icon: 'icon-gift',
+                color: 'blue',
+                iconSize: icsize,
+                iconAnchor: icanchor,
+                shadowAnchor: shanchor
+            });
+            var icon_green = L.AwesomeMarkers.icon({
+                icon: 'icon-location-arrow',
+                color: 'green',
+                iconSize: icsize,
+                iconAnchor: icanchor,
+                shadowAnchor: shanchor
+            });
+            var icon_red = L.AwesomeMarkers.icon({
+                icon: 'icon-exchange',
+                color: 'red',
+                iconSize: icsize,
+                iconAnchor: icanchor,
+                shadowAnchor: shanchor
+            });
 
 			$.post('<?php print site_url('ajaxpos/getmapmarker');?>/' + currtime.getTime() ,
 				{
@@ -24,130 +99,76 @@
 					'timestamp':$('#search_deliverytime').val(),
 					'courier':$('#search_courier').val(),
 					'status':$('#search_status').val()
-				}, 
+				},
+
 				function(data) {
 					if(data.result == 'ok'){
 
-						//var icon_yellow = new google.maps.MarkerImage('http://maps.gstatic.com/mapfiles/icon_yellow.png');								
-						//var icon_green = new google.maps.MarkerImage('http://maps.gstatic.com/mapfiles/icon_green.png');								
-						var icon_yellow = 'http://maps.gstatic.com/mapfiles/icon_yellow.png';								
-						var icon_green = 'http://maps.gstatic.com/mapfiles/icon_green.png';								
 
-						$('#map').gmap3({
-							action:'clear'
-						});
+                        if(paths.length > 0){
 
-						$.each(data.paths,function(){
-							$('#map').gmap3({
-								action:'addPolyline',
-								options:{
-									strokeColor: this.color,
-									strokeOpacity: 1.0,
-									strokeWeight: 2
-								},
-								path: this.poly
-							});
+                            for(m = 0; m < paths.length; m++){
+                                map.removeLayer(paths[m]);
+                            }
 
-						});
+                            paths = [];
+
+                        }
+
+                        if(markers.length > 0){
+
+                            for(m = 0; m < markers.length; m++){
+                                map.removeLayer(markers[m]);
+                            }
+
+                            markers = [];
+
+                        }
+
+                        $.each(data.paths, function(){
+                            var polyline = L.polyline( this.poly,
+                                {
+                                    color: this.color,
+                                    weight: lineWeight
+                                } ).addTo(map);
+
+                            paths.push(polyline);
+                        });
+
 
 						$.each(data.locations,function(){
+
 							if(this.data.status == 'loc_update'){
-								icon =  null;
+                                icon = icon_green;
 							}else if(this.data.status == 'delivered'){
-								icon = icon_yellow;								
+								icon = icon_yellow;
 							}else{
-								icon = icon_green;								
+                                icon =  icon_red;
 							}
-							$('#map').gmap3({
-								action:'addMarker',
-								latLng:[this.data.lat, this.data.lng],
-								marker: {
-									options: {
-										icon:icon
-										//icon: new google.maps.MarkerImage('http://maps.gstatic.com/mapfiles/icon_green.png')
-									},
-									data:{identifier:this.data.identifier,timestamp:this.data.timestamp,status:this.data.status},
-									events:{
-										mouseover: function(marker,event,data){
-											//console.log(data);
-											$(this).gmap3(
-												{action:'clear',name:'overlay'},
-												{action:'addOverlay',
-													latLng:marker.getPosition(),
-													content:
-														'<div style="background-color:white;padding:3px;border:thin solid #aaa;width:150px;">' +
-															'<div class="bg"></div>' +
-															'<div class="text">' + data.identifier + '<br />' + data.timestamp + '<br />' + data.status + '</div>' +
-														'</div>',
-													offset: {
-														x:-46,
-														y:-73
-													}
-												}
-											);
-										},
-										mouseout: function(){
-											$(this).gmap3({action:'clear', name:'overlay'});
-										}
-									}
-								}								
-							});
+
+                            var content = '<div style="background-color:white;padding:3px;width:150px;">' +
+                                '<div class="bg"></div>' +
+                                '<div class="text">' + this.data.identifier + '<br />' + this.data.timestamp + '<br />' + this.data.status + '</div>' +
+                            '</div>';
+
+                            if($('#showLocUpdate').is(':checked')){
+                                var m = L.marker(new L.LatLng( this.data.lat, this.data.lng ), { icon: icon }).addTo(map).bindPopup(content);
+                                markers.push(m);
+
+                            }else{
+                                if(this.data.status != 'loc_update'){
+                                    var m = L.marker(new L.LatLng( this.data.lat, this.data.lng ), { icon: icon }).addTo(map).bindPopup(content);
+                                    markers.push(m);
+                                }
+                            }
 
 						});
+
 					}
 				},'json');
 
 		}
 
-
-
-
-
-
-
-	    /*
-		$('#map').gmap3({
-			action:'init',
-			options:{
-			      center:[-6.17742,106.828308],
-			      zoom: 11
-			    }
-			},
-			<?php //print $pathcmd;?>
-			,
-			{ action:'addMarkers',
-				radius:100,
-				markers: locdata,
-				marker: {
-					options: {
-						//icon: new google.maps.MarkerImage('http://maps.gstatic.com/mapfiles/icon_green.png')
-					},
-					events:{
-						mouseover: function(marker,event,data){
-							$(this).gmap3(
-								{action:'clear',name:'overlay'},
-								{action:'addOverlay',
-									latLng:marker.getPosition(),
-									content:
-										'<div style="background-color:white;padding:3px;border:thin solid #aaa;width:150px;">' +
-											'<div class="bg"></div>' +
-											'<div class="text">' + data.identifier + '<br />' + data.timestamp + '</div>' +
-										'</div>',
-									offset: {
-										x:-46,
-										y:-73
-									}
-								}
-							);
-						},
-						mouseout: function(){
-							$(this).gmap3({action:'clear', name:'overlay'});
-						}
-					}
-				}
-			}
-			*/
-		
 	    var oTable = $('.dataTable').dataTable(
 			{
 				"bProcessing": true,
@@ -161,16 +182,16 @@
 			    "sScrollY": "500px",
 			<?php endif; ?>
 			<?php if(isset($sortdisable)):?>
-				"aoColumnDefs": [ 
+				"aoColumnDefs": [
 				            { "bSortable": false, "aTargets": [ <?php print $sortdisable; ?> ] }
 				 ],
 			<?php endif;?>
 			    "fnServerData": function ( sSource, aoData, fnCallback ) {
 		            $.ajax( {
-		                "dataType": 'json', 
-		                "type": "POST", 
-		                "url": sSource, 
-		                "data": aoData, 
+		                "dataType": 'json',
+		                "type": "POST",
+		                "url": sSource,
+		                "data": aoData,
 		                "success": fnCallback
 		            } );
 		        }
@@ -184,7 +205,7 @@
 		} );
 
 		/*
-		 * Support functions to provide a little bit of 'user friendlyness' to the textboxes in 
+		 * Support functions to provide a little bit of 'user friendlyness' to the textboxes in
 		 * the footer
 		 */
 		$('tfoot input').each( function (i) {
@@ -214,7 +235,7 @@
 			setTimeout(refresh, <?php print get_option('map_refresh_rate');?> * 1000);
 		}
 
-		refresh();		
+		refresh();
 
 
 
@@ -225,7 +246,7 @@
 			select:function(event,ui){
 				$('#assign_courier_id').val(ui.item.id);
 				$('#assign_courier_id_txt').html(ui.item.id);
-				
+
 			}
 		});
 
@@ -235,9 +256,9 @@
 			minLength: 2
 		});
 
-		
+
 		$('#search_deliverytime').datepicker({ dateFormat: 'yy-mm-dd' });
-		
+
 		$('#search_deliverytime').change(function(){
 			oTable.fnFilter( this.value, $('tfoot input').index(this) );
 			refreshMap();
@@ -248,10 +269,14 @@
 			refreshMap();
 		});
 
+        $('#showLocUpdate').click(function(){
+            refreshMap();
+        });
+
 		/*Delivery process mandatory*/
 		$('#search_deliverytime').datepicker({ dateFormat: 'yy-mm-dd' });
 		$('#assign_deliverytime').datepicker({ dateFormat: 'yy-mm-dd' });
-		
+
 		$('#doDispatch').click(function(){
 			if($('.device_id:checked').val() == undefined || $(".assign_date:checked").val() == undefined ){
 				alert('Please specify Date AND Device.');
@@ -269,7 +294,7 @@
 				$('#assign_dialog').dialog('open');
 			}
 		});
-		
+
 		$('#assign_dialog').dialog({
 			autoOpen: false,
 			height: 200,
@@ -306,13 +331,24 @@
 				$('#assign_deliverytime').val('');
 			}
 		});
-		
+
 	} );
-	
-	
+
+
 </script>
 
-
+    <div>
+        <input type="checkbox" checked="checked" id="showLocUpdate" value="1" /> Show Periodic Update Point |
+        Track Line Weight <select name="line" id="lineWeight">
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4" selected >4</option>
+            <option value="5">5</option>
+            <option value="6">6</option>
+            <option value="7">7</option>
+        </select>
+    </div>
 	<div id="tracker" >
 		<table style="padding:0px;margin:0px;">
 			<tr>

@@ -85,7 +85,7 @@
         #order_detail,#merchant_detail{
             vertical-align:top;
             padding-top:0px;
-            
+
         }
 
         #order_detail h2{
@@ -202,7 +202,7 @@
 
         .fine{
             font-size: 10px;
-        }          
+        }
     </style>
 
     <?php echo $this->ag_asset->load_css('jquery-ui-1.8.16.custom.css','jquery-ui/flick');?>
@@ -214,7 +214,7 @@
     <?php echo $this->ag_asset->load_script('jquery-ui-timepicker-addon.js','jquery-ui');?>
     <?php echo $this->ag_asset->load_script('jquery.jeditable.mini.js');?>
 
-    
+
     <script>
         var asInitVals = new Array();
         var dateBlock = <?php print getdateblock();?>;
@@ -319,7 +319,7 @@
                 var curr_date = d.getDate();
                 var curr_month = d.getMonth() + 1; //months are zero based
                 var curr_year = d.getFullYear();
-            
+
                 curr_date = (curr_date < 10)?"0" + curr_date : curr_date;
                 curr_month = (curr_month < 10)?"0" + curr_month : curr_month;
                 var indate = curr_year + '-' + curr_month + '-' + curr_date;
@@ -327,7 +327,7 @@
                 var select = 1;
                 var css = 'open';
                 var popup = 'working day';
-                
+
                 if(window.dateBlock[indate] == 'weekend'){
                     select = 0;
                     css = 'weekend';
@@ -376,7 +376,7 @@
             });
 
             $('#cancel_weight').click(function(){
-                $('#weight_option').hide();                
+                $('#weight_option').hide();
             });
 
             $('#set_delivery').click(function(){
@@ -403,9 +403,9 @@
             });
 
             $('#cancel_delivery').click(function(){
-                $('#delivery_option').hide();                
+                $('#delivery_option').hide();
             });
-            
+
         });
 
         function validate(){
@@ -467,7 +467,7 @@
                 if($('#trx_result').html() != 'Transaction Success'){
                     $('#loader').show();
                     $.post('<?php print site_url('ajax/editdetail');?>',
-                        pdata, 
+                        pdata,
                         function(data) {
                             $('#loader').hide();
                             if(data.status == 'OK:ORDERUPDATED'){
@@ -515,7 +515,7 @@
                             <tr>
                                 <td>
                                     Online Store:<br />
-                                    <span class="fine"><?php print form_checkbox(array('name'=>'show_shop','id'=>'show_shop','value'=>$main_info['delivery_id'],'checked'=>$main_info['show_shop'] ));?> Show in delivery slip</span>                                    
+                                    <span class="fine"><?php print form_checkbox(array('name'=>'show_shop','id'=>'show_shop','value'=>$main_info['delivery_id'],'checked'=>$main_info['show_shop'] ));?> Show in delivery slip</span>
                                 </td>
                                 <td>
                                     <?php print $main_info['app_name'];?>
@@ -525,7 +525,7 @@
                                 <td>Transaction ID:</td>
                                 <td><?php print $main_info['merchant_trans_id'];?></td>
                             </tr>
-<?php 
+<?php
 /*
     [mc_email] => ganti@bajuresmi.net.com.id
     [mc_street] => 2345678
@@ -550,7 +550,7 @@ $merchant_info .= ($main_info['m_country']=='')?$main_info['mc_country'].'<br />
 $merchant_info .= ($main_info['m_phone'] == '')?'Phone : '.$main_info['mc_phone']:'Phone : '.$main_info['m_phone'];
 
 
-?>                          
+?>
                             <tr>
                                 <td colspan="2">Store Detail:</td>
                             </tr>
@@ -588,7 +588,8 @@ $merchant_info .= ($main_info['m_phone'] == '')?'Phone : '.$main_info['mc_phone'
                             </tr>
                             <tr>
                                 <td class="row_label">Delivery Type:</td>
-                                <td><span id="delivery_type"><?php print $main_info['delivery_type'];?></span>&nbsp;&nbsp;&nbsp;&nbsp;
+                                <td>
+                                    <span id="delivery_type"><?php print $main_info['delivery_type'];?></span>&nbsp;&nbsp;&nbsp;&nbsp;
                                     <span id="set_delivery" style="cursor:pointer;text-decoration: underline;">set delivery type</span>
                                     <div id="delivery_option" style="display:none">
                                         <?php print $typeselect; ?>&nbsp;&nbsp;&nbsp;&nbsp;<span id="save_delivery" style="cursor:pointer;text-decoration: underline;">save</span>&nbsp;&nbsp;&nbsp;&nbsp;
@@ -608,6 +609,39 @@ $merchant_info .= ($main_info['m_phone'] == '')?'Phone : '.$main_info['mc_phone'
                                     <?php print form_input('buyerdeliveryzone',$main_info['buyerdeliveryzone'],'id="buyerdeliveryzone"');?>
                                 </td>
                             </tr>
+                            <tr>
+                                <td>Cost Bearer<hr /><span class="fine">Ongkos Dibayar Oleh</span></td>
+                                <td>
+
+                                    <label for"delivery_bearer">Delivery Fee :</label>
+                                    <span id="delivery_bearer_type"><?php print ucfirst($main_info['delivery_bearer']) ;?></span>&nbsp;&nbsp;&nbsp;&nbsp;
+                                    <span id="set_delivery" style="cursor:pointer;text-decoration: underline;">set delivery bearer</span>
+                                    <div id="delivery_bearer_option" style="display:none">
+                                        <select id="delivery_bearer">
+                                            <option value="merchant">Merchant</option>
+                                            <option value="buyer">Buyer</option>
+                                        </select>
+                                        &nbsp;&nbsp;&nbsp;&nbsp;<span id="save_delivery_bearer" style="cursor:pointer;text-decoration: underline;">save</span>&nbsp;&nbsp;&nbsp;&nbsp;
+                                        <span id="cancel_delivery_bearer" style="cursor:pointer;text-decoration: underline;">cancel</span>
+                                    </div>
+
+                                    <br />
+
+                                    <label for"cod_bearer">COD / CCOD Surcharge Fee :</label>
+                                    <span id="cod_bearer_type"><?php print ucfirst($main_info['cod_bearer']) ;?></span>&nbsp;&nbsp;&nbsp;&nbsp;
+                                    <span id="set_delivery" style="cursor:pointer;text-decoration: underline;">set COD bearer</span>
+                                    <div id="cod_bearer_option" style="display:none">
+                                        <select id="cod_surcharge_bearer">
+                                            <option value="merchant">Merchant</option>
+                                            <option value="buyer">Buyer</option>
+                                        </select>
+                                        &nbsp;&nbsp;&nbsp;&nbsp;<span id="save_cod_bearer" style="cursor:pointer;text-decoration: underline;">save</span>&nbsp;&nbsp;&nbsp;&nbsp;
+                                        <span id="cancel_cod_bearer" style="cursor:pointer;text-decoration: underline;">cancel</span>
+                                    </div>
+
+                                </td>
+                            </tr>
+
                             <tr>
                                 <td colspan="2"><strong>Order Detail</strong></td>
                             </tr>
@@ -644,7 +678,11 @@ $merchant_info .= ($main_info['m_phone'] == '')?'Phone : '.$main_info['mc_phone'
                             <tr>
                                 <td>Phone:</td>
                                 <td>
-                                    <?php print form_input('phone',$main_info['phone'],'id="phone"');?>
+                                    <?php
+                                        print ($main_info['phone'] !='' && $main_info['phone'] !='-' && !is_null($main_info['phone']) )?form_input('phone',$main_info['phone'],'id="phone"').'<br />':'';
+                                        print ($main_info['mobile1'] !='' && $main_info['mobile1'] !='-' && !is_null($main_info['mobile1']) )?form_input('mobile1',$main_info['mobile1'],'id="mobile1"').'<br />':'';
+                                        print ($main_info['mobile2'] !='' && $main_info['mobile2'] !='-' && !is_null($main_info['mobile2']) )?form_input('mobile2',$main_info['mobile2'],'id="mobile2"').'<br />':'';
+                                    ?>
                                 </td>
                             </tr>
                             <tr>
@@ -714,7 +752,7 @@ $merchant_info .= ($main_info['m_phone'] == '')?'Phone : '.$main_info['mc_phone'
             </tr>
         </tbody>
     </table>
--->    
+-->
 </div>
 </body>
 </html>
