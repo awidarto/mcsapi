@@ -56,8 +56,6 @@ class V2 extends REST_Controller {
 
                 $in = json_decode($in);
 
-                $buyer_id = 1;
-
                 $is_new = false;
 
                 $in->phone = ( isset( $in->phone ) && $in->phone != '')?normalphone( $in->phone ):'';
@@ -628,18 +626,6 @@ class V2 extends REST_Controller {
 
     private function check_email($email){
         $em = $this->db->where('email',$email)->get($this->config->item('jayon_members_table'));
-        if($em->num_rows() > 0){
-            return $em->row_array();
-        }else{
-            return false;
-        }
-    }
-
-    private function check_phone($phone, $mobile1, $mobile2){
-        $em = $this->db->like('phone',$phone)
-                ->or_like('mobile1',$mobile1)
-                ->or_like('mobile2',$mobile2)
-                ->get($this->config->item('jayon_members_table'));
         if($em->num_rows() > 0){
             return $em->row_array();
         }else{
