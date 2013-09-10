@@ -309,7 +309,7 @@ class V2 extends REST_Controller {
 
                     $nedata['detail'] = $this->table;
 
-                    $result = json_encode(array('status'=>'OK:ORDERPOSTED','timestamp'=>now(),'delivery_id'=>$delivery_id,'buyer_id'=>$buyer_id));
+                    $result = json_encode(array('status'=>'OK:ORDERPOSTED','timestamp'=>now(),'delivery_id'=>$delivery_id,'buyer_id'=>$buyer_id, 'version'=>'2.0'));
 
                     print $result;
                 }else{
