@@ -20,6 +20,8 @@ class Jexclient {
 
     public $method = 'POST';
 
+    public $params = array();
+
     public function __construct()
     {
 
@@ -42,9 +44,21 @@ class Jexclient {
         return $this;
     }
 
+    public function addparam($key, $value)
+    {
+        $this->params[$key] = $value;
+        return $this;
+    }
+
     public function endpoint($endpoint)
     {
         $this->endpoint = $endpoint;
+        return $this;
+    }
+
+    public function setmethod($method)
+    {
+        $this->method = strtoupper($method);
         return $this;
     }
 
@@ -58,15 +72,34 @@ class Jexclient {
     {
 
         $data_string = $this->data;
-        $full_url = $this->baseurl.'/'.$this->endpoint.'/format/'.$this->returnformat;
+
+        $paramstring = null;
+        if(count($this->params) > 1)
+        {
+            $paramstring = array();
+            foreach ($this->params as $key => $value) {
+                $paramstring[] = $key.'/'.$value;
+            }
+            $paramstring[] = 'format/'.$this->returnformat;
+            $paramstring = implode('/',$paramstring);
+        }else{
+            $paramstring = 'format/'.$this->returnformat;
+        }
+
+        $full_url = $this->baseurl.'/'.$this->endpoint.'/'.$paramstring;
+
         $ch = curl_init($full_url);
-        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, $this->method);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
+
+        if($this->method == 'POST')
+        {
+            curl_setopt($ch, CURLOPT_CUSTOMREQUEST, $this->method);
+            curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
+            curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+                'Content-Type: application/json',
+                'Content-Length: ' . strlen($data_string))
+            );
+        }
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, array(
-            'Content-Type: application/json',
-            'Content-Length: ' . strlen($data_string))
-        );
 
         $result = curl_exec($ch);
 
