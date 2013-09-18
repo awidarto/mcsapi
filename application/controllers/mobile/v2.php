@@ -486,7 +486,7 @@ class V2 extends REST_Controller {
         $key = $this->get('key');
         $indate = $this->get('date');
 
-        if(is_null($api_key)){
+        if(is_null($api_key) || $api_key == ''){
             $result = json_encode(array('status'=>'ERR:NOKEY','timestamp'=>now()));
             print $result;
         }else{
@@ -684,9 +684,11 @@ class V2 extends REST_Controller {
     }
 
 
-    public function uploadpic_post($api_key = null){
+    public function uploadpic_post(){
 
-        if(is_null($api_key)){
+        $api_key = $this->get('key');
+
+        if(is_null($api_key) || $api_key == ''){
             $result = json_encode(array('status'=>'ERR:NOKEY','timestamp'=>now()));
             print $result;
         }else{
@@ -716,8 +718,6 @@ class V2 extends REST_Controller {
             }
         }
     }
-
-
 
     //private supporting functions
 
