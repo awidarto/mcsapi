@@ -51,7 +51,6 @@ class V1 extends Application
 				}
 
 				$is_new = false;
-<<<<<<< HEAD
 
                 $in->phone = ( isset( $in->phone ) && $in->phone != '')?normalphone( $in->phone ):'';
                 $in->mobile1 = ( isset( $in->mobile1 ) && $in->mobile1 != '' )?normalphone( $in->mobile1 ):'';
@@ -74,15 +73,6 @@ class V1 extends Application
                     $buyer_id = $buyer['id'];
                     $is_new = false;
                 }
-=======
-				if($in->email == '' || !isset($in->email) || $in->email == 'noemail'){
-					$in->email = 'noemail';
-					$is_new = true;
-				}else if($buyer = $this->check_email($in->email)){
-					$buyer_id = $buyer['id'];
-					$is_new = false;
-				}
->>>>>>> 8da13dd92719c0dd7c5229f82e5718a2d24430b2
 
 				if($is_new){
 					$buyer_username = substr(strtolower(str_replace(' ','',$in->buyer_name)),0,6).random_string('numeric', 4);
@@ -97,7 +87,6 @@ class V1 extends Application
 					$dataset['created'] = date('Y-m-d H:i:s',time());
 
 					/*
-<<<<<<< HEAD
 					$dataset['province'] =
 					$dataset['mobile']
 					*/
@@ -106,16 +95,6 @@ class V1 extends Application
 					$dataset['district'] = $in->buyerdeliveryzone;
 					$dataset['city'] = $in->buyerdeliverycity;
 					$dataset['country']	= 'Indonesia';
-=======
-					$dataset['province'] = 		 	 	 	 	 	 	 
-					$dataset['mobile']		 	 	 	 	 	 	 
-					*/
-					
-					$dataset['street'] = $in->shipping_address;	 	 	 	 	 	 
-					$dataset['district'] = $in->buyerdeliveryzone; 
-					$dataset['city'] = $in->buyerdeliverycity;	 	 	 	 	 	 	 
-					$dataset['country']	= 'Indonesia';	 	 	 	 	 	 	 
->>>>>>> 8da13dd92719c0dd7c5229f82e5718a2d24430b2
 					$dataset['zip'] = $in->zip;
 
 					$buyer_id = $this->register_buyer($dataset);
@@ -156,15 +135,9 @@ class V1 extends Application
 
 				$order['width'] = $in->width;
 				$order['height'] = $in->height;
-<<<<<<< HEAD
 				$order['length'] = $in->length;
 				$order['weight'] = (isset($in->weight))?$in->weight:0;
 				$order['delivery_type'] = $in->delivery_type;
-=======
-				$order['length'] = $in->length;				
-				$order['weight'] = (isset($in->weight))?$in->weight:0;				
-				$order['delivery_type'] = $in->delivery_type;				
->>>>>>> 8da13dd92719c0dd7c5229f82e5718a2d24430b2
 				$order['delivery_cost'] = (isset($in->delivery_cost))?$in->delivery_cost:0;
 
 				$order['cod_bearer'] = (isset($in->cod_bearer))?$in->cod_bearer:'merchant';
@@ -174,19 +147,11 @@ class V1 extends Application
 				$order['ccod_method'] = (isset($in->ccod_method))?$in->ccod_method:'full';
 
 				if(isset($in->show_shop)){
-<<<<<<< HEAD
 					$order['show_shop'] = $in->show_shop;
 				}
 
 				if(isset($in->show_merchant)){
 					$order['show_merchant'] = $in->show_merchant;
-=======
-					$order['show_shop'] = $in->show_shop;	
-				}
-
-				if(isset($in->show_merchant)){
-					$order['show_merchant'] = $in->show_merchant;				
->>>>>>> 8da13dd92719c0dd7c5229f82e5718a2d24430b2
 				}
 
 				$inres = $this->db->insert($this->config->item('incoming_delivery_table'),$order);
@@ -209,17 +174,10 @@ class V1 extends Application
 
 
 					$this->table->set_heading(
-<<<<<<< HEAD
 						'No.',
 						'Description',
 						'Quantity',
 						'Total'
-=======
-						'No.',		 	 	
-						'Description',	 	 	 	 	 	 	 
-						'Quantity',		
-						'Total'			
->>>>>>> 8da13dd92719c0dd7c5229f82e5718a2d24430b2
 						); // Setting headings for the table
 
 					$d = 0;
@@ -242,7 +200,6 @@ class V1 extends Application
 						$rs = $this->db->insert($this->config->item('delivery_details_table'),$item);
 
 						$this->table->add_row(
-<<<<<<< HEAD
 							(int)$item['unit_sequence'] + 1,
 							$item['unit_description'],
 							$item['unit_quantity'],
@@ -251,25 +208,11 @@ class V1 extends Application
 
 						$u_total = str_replace(array(',','.'), '', $item['unit_total']);
 						$u_discount = str_replace(array(',','.'), '', $item['unit_discount']);
-=======
-							(int)$item['unit_sequence'] + 1,		 	 	
-							$item['unit_description'],	 	 	 	 	 	 	 
-							$item['unit_quantity'],		
-							$item['unit_total']			
-						);
-
-						$u_total = str_replace(array(',','.'), '', $item['unit_total']);
-						$u_discount = str_replace(array(',','.'), '', $item['unit_discount']);						
->>>>>>> 8da13dd92719c0dd7c5229f82e5718a2d24430b2
 						$gt += (int)$u_total;
 						$d += (int)$u_discount;
 
 					}
-<<<<<<< HEAD
 
-=======
-					
->>>>>>> 8da13dd92719c0dd7c5229f82e5718a2d24430b2
 					$total = (isset($in->total_price) && $in->total_price > 0)?$in->total_price:0;
 					$total = str_replace(array(',','.'), '', $total);
 					$total = (int)$total;
@@ -290,41 +233,23 @@ class V1 extends Application
 					$chg = ($gt - $disc) + $tax + $cod;
 
 					$this->table->add_row(
-<<<<<<< HEAD
 						'',
 						'',
 						'Total Price',
-=======
-						'',		
-						'',		
-						'Total Price',		
->>>>>>> 8da13dd92719c0dd7c5229f82e5718a2d24430b2
 						number_format($gt,2,',','.')
 					);
 
 					$this->table->add_row(
-<<<<<<< HEAD
 						'',
 						'',
 						'Total Discount',
-=======
-						'',		
-						'',		
-						'Total Discount',		
->>>>>>> 8da13dd92719c0dd7c5229f82e5718a2d24430b2
 						number_format($disc,2,',','.')
 					);
 
 					$this->table->add_row(
-<<<<<<< HEAD
 						'',
 						'',
 						'Total Tax',
-=======
-						'',		
-						'',		
-						'Total Tax',		
->>>>>>> 8da13dd92719c0dd7c5229f82e5718a2d24430b2
 						number_format($tax,2,',','.')
 					);
 
@@ -338,30 +263,18 @@ class V1 extends Application
 						);
 					}else{
 						$this->table->add_row(
-<<<<<<< HEAD
 							'',
 							'',
 							'COD Charges',
-=======
-							'',		
-							'',		
-							'COD Charges',		
->>>>>>> 8da13dd92719c0dd7c5229f82e5718a2d24430b2
 							number_format($cod,2,',','.')
 						);
 					}
 
 
 					$this->table->add_row(
-<<<<<<< HEAD
 						'',
 						'',
 						'Total Charges',
-=======
-						'',		
-						'',		
-						'Total Charges',		
->>>>>>> 8da13dd92719c0dd7c5229f82e5718a2d24430b2
 						number_format($chg,2,',','.')
 					);
 
@@ -383,11 +296,7 @@ class V1 extends Application
 				if($app->notify_on_new_order == 1){
 					send_notification('New Delivery Order - Jayon Express COD Service',$in->email,$app->cc_to,$app->reply_to,'order_submit',$nedata,null);
 				}
-<<<<<<< HEAD
 
-=======
-				
->>>>>>> 8da13dd92719c0dd7c5229f82e5718a2d24430b2
 				if($is_new == true){
 					$edata['fullname'] = $dataset['fullname'];
 					$edata['username'] = $buyer_username;
@@ -588,7 +497,7 @@ class V1 extends Application
 
 					if(in_array($in->status,$sendable)){
 
-						$this->db->select($this->config->item('incoming_delivery_table').'.*,b.fullname as buyer,m.merchantname as merchant,b.email as buyer_email,b.fullname as buyer_name,m.email as merchant_email,a.application_name as app_name');
+						$this->db->select($this->config->item('incoming_delivery_table').'.*,m.merchantname as merchant,m.email as merchant_email,a.application_name as app_name');
 						$this->db->from($this->config->item('incoming_delivery_table'));
 						$this->db->join('members as b',$this->config->item('incoming_delivery_table').'.buyer_id=b.id','left');
 						$this->db->join('members as m',$this->config->item('incoming_delivery_table').'.merchant_id=m.id','left');
@@ -605,7 +514,7 @@ class V1 extends Application
 							$edata['status'] = ucwords(str_replace('_', '', $in->status));
 
 							//send_notification($subject,$to,$cc = null,$reply_to = null,$template = 'default',$data = null,$attachment = null)
-							send_notification('Order '.ucwords($in->status).' - Jayon Express',$ord->buyer_email,$ord->merchant_email,null,'status_update',$edata,null);
+							send_notification('Order '.ucwords($in->status).' - Jayon Express',$ord->email,$ord->merchant_email,null,'status_update',$edata,null);
 						}
 
 					}
@@ -633,11 +542,7 @@ class V1 extends Application
 			if($api_key == $this->config->item('master_key')){
 
 				if(isset($_POST['req'])){
-<<<<<<< HEAD
 
-=======
-					
->>>>>>> 8da13dd92719c0dd7c5229f82e5718a2d24430b2
 					$in = json_decode($_POST['req']);
 
 					//$in->user = 'administrator';
@@ -683,20 +588,12 @@ class V1 extends Application
 						print $result;
 					}
 
-<<<<<<< HEAD
 
-=======
-				
->>>>>>> 8da13dd92719c0dd7c5229f82e5718a2d24430b2
 				}else{
 					$result = json_encode(array('status'=>'NOK:NODATASENT','timestamp'=>now()));
 					print $result;
 				}
-<<<<<<< HEAD
 
-=======
-				
->>>>>>> 8da13dd92719c0dd7c5229f82e5718a2d24430b2
 			}else{
 				$result = json_encode(array('status'=>'NOK:INVALIDKEY','timestamp'=>now()));
 				print $result;
@@ -800,11 +697,7 @@ class V1 extends Application
 							d.recipient_name as rec_name,
 							d.undersign as rec_sign,
 							d.total_price as tot_price,
-<<<<<<< HEAD
 							d.total_discount as tot_disc,
-=======
-							d.total_discount as tot_disc,	
->>>>>>> 8da13dd92719c0dd7c5229f82e5718a2d24430b2
 							d.total_tax	as tot_tax,
 							d.chargeable_amount as chg_amt,
 							d.cod_cost as cod_cost,
@@ -847,11 +740,7 @@ class V1 extends Application
 					{
 
 						$u_total = str_replace(array(',','.'), '', $key['unit_total']);
-<<<<<<< HEAD
 						$u_discount = str_replace(array(',','.'), '', $key['unit_discount']);
-=======
-						$u_discount = str_replace(array(',','.'), '', $key['unit_discount']);						
->>>>>>> 8da13dd92719c0dd7c5229f82e5718a2d24430b2
 						$gt += (int)$u_total;
 						$d += (int)$u_discount;
 					}
@@ -870,17 +759,10 @@ class V1 extends Application
 
 					$chg = ($gt - $dsc) + $tax + $cod;
 
-<<<<<<< HEAD
 		            //$o['tot_price'] =>
 		            //$o['tot_disc'] =>
 		            //$o['tot_tax'] =>
 		            //$o['chg_amt'] =>
-=======
-		            //$o['tot_price'] => 
-		            //$o['tot_disc'] => 
-		            //$o['tot_tax'] => 
-		            //$o['chg_amt'] => 
->>>>>>> 8da13dd92719c0dd7c5229f82e5718a2d24430b2
 					$o['cod_cost'] = number_format($chg,2,',','.');
 					$output[] = $o;
 				}
@@ -929,11 +811,7 @@ class V1 extends Application
 				$config['width']	 = 100;
 				$config['height']	= 75;
 
-<<<<<<< HEAD
 				$this->load->library('image_lib', $config);
-=======
-				$this->load->library('image_lib', $config); 
->>>>>>> 8da13dd92719c0dd7c5229f82e5718a2d24430b2
 
 				$this->image_lib->resize();
 
@@ -1158,7 +1036,6 @@ class V1 extends Application
 		}
 	}
 
-<<<<<<< HEAD
     private function check_phone($phone, $mobile1, $mobile2){
         $em = $this->db->like('phone',$phone)
                 ->or_like('mobile1',$mobile1)
@@ -1171,8 +1048,6 @@ class V1 extends Application
         }
     }
 
-=======
->>>>>>> 8da13dd92719c0dd7c5229f82e5718a2d24430b2
 	private function register_buyer($dataset){
 		$dataset['group_id'] = 5;
 
@@ -1224,6 +1099,20 @@ class V1 extends Application
 			return false;
 		}
 	}
+
+    public function testquery(){
+
+        $this->db->select($this->config->item('incoming_delivery_table').'.*,m.merchantname as merchant,m.email as merchant_email,a.application_name as app_name');
+        $this->db->from($this->config->item('incoming_delivery_table'));
+        $this->db->join('members as b',$this->config->item('incoming_delivery_table').'.buyer_id=b.id','left');
+        $this->db->join('members as m',$this->config->item('incoming_delivery_table').'.merchant_id=m.id','left');
+        $this->db->join('applications as a',$this->config->item('incoming_delivery_table').'.application_id=b.id','left');
+
+        $ord = $this->db->where($this->config->item('incoming_delivery_table').'.delivery_id',$delivery_id)->get();
+
+        print $this->db->last_query();
+    }
+
 }
 
 ?>
