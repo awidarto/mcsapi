@@ -340,15 +340,15 @@ class V2 extends REST_Controller {
         $this->log_access($api_key, __METHOD__ ,$result,$args);
     }
 
-    function order_get(){
+    public function order_get(){
         $this->response(array('message'=>'Not Implemented'),400);
     }
 
-    function order_put(){
+    public function order_put(){
         $this->response(array('message'=>'Not Implemented'),400);
     }
 
-    function order_delete(){
+    public function order_delete(){
         $this->response(array('message'=>'Not Implemented'),400);
     }
 
@@ -399,20 +399,23 @@ class V2 extends REST_Controller {
         }
     }
 
-    function merchant_post(){
+    public function merchant_post(){
         $this->response(array('message'=>'Not Implemented'),400);
     }
 
-    function merchant_put(){
+    public function merchant_put(){
         $this->response(array('message'=>'Not Implemented'),400);
     }
 
-    function merchant_delete(){
+    public function merchant_delete(){
         $this->response(array('message'=>'Not Implemented'),400);
     }
+
 
     /* Synchronize mobile device */
-    public function syncreport($api_key = null){
+    public function report_post(){
+        $api_key = $this->get('key');
+
         if(is_null($api_key)){
             $result = json_encode(array('status'=>'ERR:NOKEY','timestamp'=>now()));
             print $result;
@@ -429,7 +432,13 @@ class V2 extends REST_Controller {
 
                 if(isset($_POST['trx'])){
 
-                    $in = json_decode($_POST['trx']);
+                    $in = file_get_contents('php://input');
+
+                    $args = 'p='.$in;
+
+                    $in = json_decode($in);
+
+                    //$in = json_decode($_POST['trx']);
 
                     //file_put_contents('log_data.txt',print_r($in));
 
@@ -473,7 +482,11 @@ class V2 extends REST_Controller {
         $this->log_access($api_key, __METHOD__ ,$result);
     }
 
-    public function syncdata($api_key = null,$indate = null){
+    public function data_post($api_key = null,$indate = null){
+
+        $key = $this->get('key');
+        $indate = $this->get('date');
+
         if(is_null($api_key)){
             $result = json_encode(array('status'=>'ERR:NOKEY','timestamp'=>now()));
             print $result;
@@ -598,7 +611,7 @@ class V2 extends REST_Controller {
         $this->log_access($api_key, __METHOD__ ,$result);
     }
 
-    public function uploadpic($api_key = null){
+    public function uploadpic_post($api_key = null){
 
         if(is_null($api_key)){
             $result = json_encode(array('status'=>'ERR:NOKEY','timestamp'=>now()));
