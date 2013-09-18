@@ -428,9 +428,10 @@ class V2 extends REST_Controller {
             //sync out
             if($dev = $this->get_dev_info($api_key)){
 
-                if(isset($_POST['trx'])){
+                $in = file_get_contents('php://input');
 
-                    $in = file_get_contents('php://input');
+                if($in){
+
 
                     $args = 'p='.$in;
 
@@ -480,7 +481,7 @@ class V2 extends REST_Controller {
         $this->log_access($api_key, __METHOD__ ,$result);
     }
 
-    public function data_post($api_key = null,$indate = null){
+    public function data_get($api_key = null,$indate = null){
 
         $key = $this->get('key');
         $indate = $this->get('date');
@@ -608,6 +609,80 @@ class V2 extends REST_Controller {
 
         $this->log_access($api_key, __METHOD__ ,$result);
     }
+
+    public function mobkey_post(){
+
+        $api_key = $this->get('key');
+
+        if(is_null($api_key) || $key == ''){
+            $result = json_encode(array('status'=>'ERR:NOKEY','timestamp'=>now()));
+            print $result;
+        }else{
+            if($api_key == $this->config->item('master_key')){
+
+                $in = file_get_contents('php://input');
+
+                if($in != ''){
+
+                    $args = 'p='.$in;
+
+                    $in = json_decode($in);
+
+                    if($this->admin_auth($in->user,$in->pass)){
+
+
+                        //file_put_contents('posted_status.txt', $_POST['trx'] );
+
+
+                        if($dev = $this->get_dev_info_by_id($in->identifier)){
+
+                            $data = array(
+                                'timestamp'=>date('Y-m-d H:i:s',time()),
+                                'report_timestamp'=>date('Y-m-d H:i:s',time()),
+                                'delivery_id'=>'',
+                                'device_id'=>$dev->id,
+                                'courier_id'=>'',
+                                'actor_type'=>'MB',
+                                'actor_id'=>'',
+                                //'latitude'=>$in->lat,
+                                //'longitude'=>$in->lon,
+                                'status'=>$this->config->item('trans_status_mobile_keyrequest'),
+                                //'notes'=>$in->notes
+                            );
+
+                            delivery_log($data);
+                            $result = json_encode(array('status'=>'OK:NEWKEY',
+                                'keydata' => $dev->key,
+                                'identifier'=>$in->identifier,
+                                'timestamp'=>now()));
+                            print $result;
+                        }else{
+                            $result = json_encode(array('status'=>'NOK:DEVICENOTFOUND','timestamp'=>now()));
+                            print $result;
+                        }
+
+                    }else{
+                        //full calendar time series for current month
+                        $result = json_encode(array('status'=>'NOK:AUTHFAILED','timestamp'=>now()));
+                        print $result;
+                    }
+
+
+                }else{
+                    $result = json_encode(array('status'=>'NOK:NODATASENT','timestamp'=>now()));
+                    print $result;
+                }
+
+            }else{
+                $result = json_encode(array('status'=>'NOK:INVALIDKEY','timestamp'=>now()));
+                print $result;
+            }
+
+        }
+
+        $this->log_access($api_key, __METHOD__ ,$result);
+    }
+
 
     public function uploadpic_post($api_key = null){
 
