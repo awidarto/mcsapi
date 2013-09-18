@@ -352,7 +352,64 @@ class V2 extends REST_Controller {
         $this->response(array('message'=>'Not Implemented'),400);
     }
 
+    /* Merchant end point */
 
+    public function merchant_get()
+    {
+        $key = $this->get('key');
+        $group_id = user_group_id('merchant');
+
+        if(is_null($key) || !isset($key)){
+            $result = json_encode(array('status'=>'ERR:NOKEY','timestamp'=>now()));
+            $this->response(array('status'=>'ERR:NOKEY','timestamp'=>now()),400);
+        }else{
+
+                $merchants = $this->db
+                    ->select('
+                            street,
+                            district,
+                            province,
+                            city,
+                            country,
+                            zip,
+                            phone,
+                            mobile,
+                            mobile1,
+                            mobile2,
+                            merchantname,
+                            mc_email,
+                            mc_street,
+                            mc_district,
+                            mc_city,
+                            mc_province,
+                            mc_country,
+                            mc_zip,
+                            mc_phone,
+                            mc_mobile')
+                    ->from($this->config->item('jayon_members_table'))
+                    ->where('group_id',$group_id)
+                    ->order_by('created','desc')
+                    ->get();
+
+                    //print $this->db->last_query();
+
+                $merchant = $merchants->result_array();
+
+            $this->response(array('status'=>'OK','data'=>$merchant,'timestamp'=>now()),200);
+        }
+    }
+
+    function merchant_post(){
+        $this->response(array('message'=>'Not Implemented'),400);
+    }
+
+    function merchant_put(){
+        $this->response(array('message'=>'Not Implemented'),400);
+    }
+
+    function merchant_delete(){
+        $this->response(array('message'=>'Not Implemented'),400);
+    }
 
     /* Synchronize mobile device */
     public function syncreport($api_key = null){
