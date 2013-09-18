@@ -364,7 +364,8 @@ class V2 extends REST_Controller {
             $this->response(array('status'=>'ERR:NOKEY','timestamp'=>now()),400);
         }else{
                 $merchants = $this->db
-                    ->select('street,
+                    ->select(   'id,
+                                street,
                                 district,
                                 province,
                                 city,
