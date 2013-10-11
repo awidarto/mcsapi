@@ -321,16 +321,24 @@ function user_group_id($group)
 	return $row->id;
 }
 
-function get_weight_range($tariff,$app_id = null){
+function get_weight_tariff($weight, $delivery_type ,$app_id = null){
 	$CI =& get_instance();
 
+    $weight = (float)$weight;
+
 	if($tariff > 0){
-		$CI->db->select('kg_from,kg_to');
-		$CI->db->where('total',$tariff);
-		$result = $CI->db->get($CI->config->item('jayon_delivery_fee_table'));
+		$CI->db->select('total');
+        $CI->db->where('app_id', $app_id);
+		$CI->db->where('kg_from <= ',$weight);
+        $CI->db->where('kg_to >= ',$weight);
+        if($delivery_type == 'PS'){
+            $result = $CI->db->get($CI->config->item('jayon_pickup_fee_table'));
+        }else{
+            $result = $CI->db->get($CI->config->item('jayon_delivery_fee_table'));
+        }
 		if($result->num_rows() > 0){
 			$row = $result->row();
-			return $row->kg_from.' kg - '.$row->kg_to.' kg';
+			return $row->total;
 		}else{
 			return 0;
 		}
@@ -338,6 +346,25 @@ function get_weight_range($tariff,$app_id = null){
 		return 0;
 	}
 }
+
+function get_weight_range($tariff,$app_id = null){
+    $CI =& get_instance();
+
+    if($tariff > 0){
+        $CI->db->select('kg_from,kg_to');
+        $CI->db->where('total',$tariff);
+        $result = $CI->db->get($CI->config->item('jayon_delivery_fee_table'));
+        if($result->num_rows() > 0){
+            $row = $result->row();
+            return $row->kg_from.' kg - '.$row->kg_to.' kg';
+        }else{
+            return 0;
+        }
+    }else{
+        return 0;
+    }
+}
+
 
 function get_cod_tariff($total_price,$app_id = null){
 	$CI =& get_instance();
