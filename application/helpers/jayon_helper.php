@@ -326,7 +326,7 @@ function get_weight_tariff($weight, $delivery_type ,$app_id = null){
 
     $weight = (float)$weight;
 
-	if($tariff > 0){
+	if($weight > 0){
 		$CI->db->select('total');
         $CI->db->where('app_id', $app_id);
 		$CI->db->where('kg_from <= ',$weight);
