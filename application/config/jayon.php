@@ -80,6 +80,37 @@ $config['trans_status_admin_devassigned'] = 'dev_assigned';
 $config['trans_status_admin_courierassigned'] = 'cr_assigned';
 $config['trans_status_admin_dispatched'] = 'dispatched';
 
+/* API invalid status */
+
+$config['invalid_status'] = array(
+
+    //$config['trans_status_new'] = 'pending';
+    $config['trans_status_purged'],
+    $config['trans_status_archived'],
+    //$config['trans_status_confirmed'] = 'confirmed';
+    $config['trans_status_rescheduled'],
+
+    $config['trans_status_mobile_dispatched'],
+    $config['trans_status_mobile_departure'],
+    $config['trans_status_mobile_return'],
+    $config['trans_status_mobile_pickedup'],
+    $config['trans_status_mobile_enroute'],
+    $config['trans_status_mobile_location'],
+    $config['trans_status_mobile_rescheduled'],
+    $config['trans_status_mobile_delivered'],
+    $config['trans_status_mobile_revoked'],
+    $config['trans_status_mobile_noshow'],
+    $config['trans_status_mobile_keyrequest'],
+    $config['trans_status_mobile_syncnote'],
+
+    $config['trans_status_admin_zoned'],
+    $config['trans_status_admin_dated'],
+    $config['trans_status_admin_devassigned'],
+    $config['trans_status_admin_courierassigned'],
+    $config['trans_status_admin_dispatched']
+
+);
+
 /* status colors */
 
 $config['status_colors'] = array(
@@ -151,7 +182,7 @@ $config['notify_password'] = 'NotiFier987';
 $config['admin_username'] = 'admin@jayonexpress.com';
 $config['admin_password'] = 'JayonAdmin234';
 
-//for test only 
+//for test only
 
 $config['api_url'] = 'http://localhost/beta2/jayonadmin/api/v1/';
 

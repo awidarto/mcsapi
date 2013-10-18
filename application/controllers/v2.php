@@ -64,6 +64,11 @@ class V2 extends REST_Controller {
                 $in->mobile1 = ( isset( $in->mobile1 ) && $in->mobile1 != '' )?normalphone( $in->mobile1 ):'';
                 $in->mobile2 = ( isset( $in->mobile2 ) && $in->mobile2 != '' )?normalphone( $in->mobile2 ):'';
 
+                if(in_array($in->status, $this->config->item('invalid_status')) ){
+                    $result = json_encode(array('status'=>'OK:INVALIDORDERSTATUS','timestamp'=>now()));
+                    print $result;
+                    exit();
+                }
 
                 if(isset($in->buyer_id) && $in->buyer_id != '' && $in->buyer_id > 1){
 
@@ -185,6 +190,9 @@ class V2 extends REST_Controller {
                 }
 
                 $inres = $this->db->insert($this->config->item('incoming_delivery_table'),$order);
+
+                //print $this->db->last_query();
+
                 $sequence = $this->db->insert_id();
 
                 $delivery_id = get_delivery_id($sequence,$app->merchant_id);
@@ -246,7 +254,7 @@ class V2 extends REST_Controller {
                     $total = (isset($in->total_price) && $in->total_price > 0)?$in->total_price:0;
                     $total = str_replace(array(',','.'), '', $total);
                     $total = (int)$total;
-                    $gt = ($total < $gt)?$gt:$total;
+                    //$gt = ($total < $gt)?$gt:$total;
 
                     $disc = (isset($in->total_discount))?$in->total_discount:0;
                     $tax = (isset($in->total_tax))?$in->total_tax:0;
@@ -320,6 +328,7 @@ class V2 extends REST_Controller {
 
                     print $result;
                 }
+
 
                 //print_r($app);
 
