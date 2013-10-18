@@ -111,6 +111,13 @@ $config['invalid_status'] = array(
 
 );
 
+$config['valid_status'] = array(
+
+    $config['trans_status_new'],
+    $config['trans_status_confirmed'],
+
+);
+
 /* status colors */
 
 $config['status_colors'] = array(
