@@ -64,9 +64,13 @@ class V2 extends REST_Controller {
                 $in->mobile1 = ( isset( $in->mobile1 ) && $in->mobile1 != '' )?normalphone( $in->mobile1 ):'';
                 $in->mobile2 = ( isset( $in->mobile2 ) && $in->mobile2 != '' )?normalphone( $in->mobile2 ):'';
 
+                $in->status = isset($in->status)?$in->status:$this->config->item('trans_status_new');
+
                 if(!in_array(strtolower($in->status), $this->config->item('valid_status')) ){
                     $result = json_encode(array('status'=>'OK:INVALIDORDERSTATUS','timestamp'=>now()));
                     print $result;
+
+                    $this->log_access($api_key, __METHOD__ ,$result,$args);
                     exit();
                 }
 
