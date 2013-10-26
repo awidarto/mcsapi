@@ -380,18 +380,28 @@ class V2 extends REST_Controller {
         if(is_null($api_key) || $api_key == ''){
             $this->response(array('status'=>'ERR:NOKEY','timestamp'=>now()),400);
         }else{
-            $this->db->select('district,city,province,country')
-            ->from($this->config->item('jayon_zones_table'))
-            ->where('is_on',1);
-            $zones = $this->db->get();
-            $zones = $zones->result_array();
+            $app = $this->get_key_info(trim($api_key));
 
-            $result = json_encode(array('status'=>'OK:ZONERETRIEVED','timestamp'=>now(),'zones'=>$zones));
+            if($app == false){
+                $this->response(array('status'=>'ERR:INVALIDKEY','timestamp'=>now()),400);
+            }else{
 
-            print $result;
+                $this->db->select('district,city,province,country')
+                    ->from($this->config->item('jayon_zones_table'))
+                    ->where('is_on',1);
 
-            $args = '';
-            $this->log_access($api_key, __METHOD__ ,$result,$args);
+                $zones = $this->db->get();
+                $zones = $zones->result_array();
+
+                $result = json_encode(array('status'=>'OK:ZONERETRIEVED','timestamp'=>now(),'zones'=>$zones));
+
+                print $result;
+
+                $args = '';
+                $this->log_access($api_key, __METHOD__ ,$result,$args);
+
+            }
+
         }
 
     }
