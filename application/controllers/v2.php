@@ -370,6 +370,40 @@ class V2 extends REST_Controller {
         $this->response(array('message'=>'Not Implemented'),400);
     }
 
+    function zone_post(){
+        $this->response(array('message'=>'Not Implemented'),400);
+    }
+
+    function zone_get(){
+        $api_key = $this->get('key');
+
+        if(is_null($api_key) || $api_key == ''){
+            $this->response(array('status'=>'ERR:NOKEY','timestamp'=>now()),400);
+        }else{
+            $this->db->select('district,city,province,country')
+            ->from($this->config->item('jayon_zones_table'))
+            ->where('is_on',1);
+            $zones = $this->db->get();
+            $zones = $zones->result_array();
+
+            $result = json_encode(array('status'=>'OK:ZONERETRIEVED','timestamp'=>now(),'zones'=>$zones));
+
+            print $result;
+
+            $args = '';
+            $this->log_access($api_key, __METHOD__ ,$result,$args);
+        }
+
+    }
+
+    function zone_put(){
+        $this->response(array('message'=>'Not Implemented'),400);
+    }
+
+    function zone_delete(){
+        $this->response(array('message'=>'Not Implemented'),400);
+    }
+
 
 
     /* Synchronize mobile device */
