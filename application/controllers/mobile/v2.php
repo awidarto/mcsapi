@@ -358,11 +358,95 @@ class V2 extends REST_Controller {
     {
         $api_key = $this->get('key');
         $group_id = user_group_id('merchant');
+        $last = $this->get('last');
+
+        //print $last;
+
+        if($last == 0 || $last == '' || is_null($last)){
+            $last_created = date('Y-m-d H:i:s',0);
+            $last_update = now();
+        }else{
+            $last_created = date('Y-m-d H:i:s',$last);
+            $last_update = $last;
+        }
+
+
+        //print $last_created;
 
         if(is_null($api_key) || !isset($api_key) || $api_key == ''){
             $result = json_encode(array('status'=>'ERR:NOKEY','timestamp'=>now()));
             $this->response(array('status'=>'ERR:NOKEY','timestamp'=>now()),400);
         }else{
+                /*
+                // get new
+                $new_merchants = $this->db
+                    ->select(   'id,
+                                street,
+                                district,
+                                province,
+                                city,
+                                country,
+                                zip,
+                                phone,
+                                mobile,
+                                mobile1,
+                                mobile2,
+                                merchantname,
+                                mc_email,
+                                mc_street,
+                                mc_district,
+                                mc_city,
+                                mc_province,
+                                mc_country,
+                                mc_zip,
+                                mc_phone,
+                                mc_mobile')
+                    ->from($this->config->item('jayon_members_table'))
+                    ->where('group_id',$group_id)
+                    ->where('created > ',$last_created)
+                    ->where('updated > ',$last_update)
+                    ->order_by('created','desc')
+                    ->get();
+
+                    //print $this->db->last_query();
+
+
+                $updated_merchants = $this->db
+                    ->select(   'id,
+                                street,
+                                district,
+                                province,
+                                city,
+                                country,
+                                zip,
+                                phone,
+                                mobile,
+                                mobile1,
+                                mobile2,
+                                merchantname,
+                                mc_email,
+                                mc_street,
+                                mc_district,
+                                mc_city,
+                                mc_province,
+                                mc_country,
+                                mc_zip,
+                                mc_phone,
+                                mc_mobile')
+                    ->from($this->config->item('jayon_members_table'))
+                    ->where('group_id',$group_id)
+                    ->where('created < ',$last_created)
+                    ->where('updated > ',$last_update)
+                    ->order_by('created','desc')
+                    ->get();
+
+                $new_merchants = $new_merchants->result_array();
+                $updated_merchants = $updated_merchants->result_array();
+
+                $data = array('new'=>$new_merchants, 'updated'=>$updated_merchants);
+
+                */
+
                 $merchants = $this->db
                     ->select(   'id,
                                 street,
@@ -388,13 +472,71 @@ class V2 extends REST_Controller {
                     ->from($this->config->item('jayon_members_table'))
                     ->where('group_id',$group_id)
                     ->order_by('created','desc')
-                    ->get();
+                    ->get()
+                    ->result_array();
 
-                    //print $this->db->last_query();
 
-                $merchant = $merchants->result_array();
 
-            $this->response(array('status'=>'OK','data'=>$merchant,'timestamp'=>now()),200);
+
+
+                $apps = $this->db
+                    ->select(   'id,
+                                merchant_id,
+                                domain,
+                                application_name,
+                                key')
+
+                    ->from($this->config->item('applications_table'))
+                    ->order_by('created','desc')
+                    ->get()
+                    ->result_array();
+
+                $cod = $this->db
+                    ->select(   'id,
+                                from_price,
+                                to_price,
+                                surcharge,
+                                app_id')
+
+                    ->from($this->config->item('jayon_cod_fee_table'))
+                    ->get()
+                    ->result_array();
+
+                $do = $this->db
+                    ->select(   'id,
+                                kg_from,
+                                kg_to,
+                                calculated_kg,
+                                tariff_kg,
+                                total,
+                                app_id')
+
+                    ->from($this->config->item('jayon_delivery_fee_table'))
+                    ->get()
+                    ->result_array();
+
+                $ps = $this->db
+                    ->select(   'id,
+                                kg_from,
+                                kg_to,
+                                calculated_kg,
+                                tariff_kg,
+                                total,
+                                app_id')
+
+                    ->from($this->config->item('jayon_pickup_fee_table'))
+                    ->get()
+                    ->result_array();
+
+                $data = array(
+                    'merchants'=>$merchants,
+                    'apps'=>$apps,
+                    'cod'=>$cod,
+                    'do'=>$do,
+                    'ps'=>$ps
+                    );
+
+            $this->response(array('status'=>'OK','data'=>$data,'timestamp'=>now()),200);
         }
     }
 
