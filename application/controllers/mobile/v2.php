@@ -552,6 +552,52 @@ class V2 extends REST_Controller {
         $this->response(array('message'=>'Not Implemented'),400);
     }
 
+    /* Zones */
+
+    public function zone_get(){
+
+        $city = $this->db
+            ->distinct('city')
+            ->select('city')
+            ->from($this->config->item('jayon_zones_table'))
+            ->get()
+            ->result_array();
+
+        $cities = array();
+        foreach($city as $c){
+            $cities[]['name'] = $c['city'];
+        }
+
+
+        $district = $this->db
+            ->select('district,
+                        city,
+                        province,
+                        country,
+                        is_on')
+            ->from($this->config->item('jayon_zones_table'))
+            ->get()
+            ->result_array();
+
+        $data = array(
+            'city'=>$cities,
+            'district'=>$district
+            );
+
+        $this->response(array('status'=>'OK','data'=>$data,'timestamp'=>now()),200);
+    }
+
+    public function zone_post(){
+        $this->response(array('message'=>'Not Implemented'),400);
+    }
+
+    public function zone_put(){
+        $this->response(array('message'=>'Not Implemented'),400);
+    }
+
+    public function zone_delete(){
+        $this->response(array('message'=>'Not Implemented'),400);
+    }
 
     /* Synchronize mobile device */
     public function report_post(){
