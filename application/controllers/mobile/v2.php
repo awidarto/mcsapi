@@ -872,8 +872,57 @@ class V2 extends REST_Controller {
         $this->log_access($api_key, __METHOD__ ,$result);
     }
 
+    public function pickup_post(){
+
+        $in = file_get_contents('php://input');
+
+        $dt = json_decode($in);
+
+        $filename = random_string('alnum', 8);
+
+        $pu_dir = FCPATH.'json/pickup/';
+
+        file_put_contents( $pu_dir.$filename.'.json' , $in);
+
+    }
+
 
     public function uploadpic_post(){
+
+        $api_key = $this->get('key');
+
+        if(is_null($api_key) || $api_key == ''){
+            $result = json_encode(array('status'=>'ERR:NOKEY','timestamp'=>now()));
+            print $result;
+        }else{
+            $delivery_id = $this->input->post('delivery_id');
+
+            $target_path = $this->config->item('picture_path').$delivery_id.'.jpg';
+
+            if(move_uploaded_file($_FILES['receiverpic']['tmp_name'], $target_path)) {
+
+                $config['image_library'] = 'gd2';
+                $config['source_image'] = $target_path;
+                $config['new_image'] = $this->config->item('thumbnail_path').'th_'.$delivery_id.'.jpg';
+                $config['create_thumb'] = false;
+                $config['maintain_ratio'] = TRUE;
+                $config['width']     = 100;
+                $config['height']   = 75;
+
+                $this->load->library('image_lib', $config);
+
+                $this->image_lib->resize();
+
+                $result = json_encode(array('status'=>'OK:PICUPLOAD','timestamp'=>now()));
+                print $result;
+            } else{
+                $result = json_encode(array('status'=>'ERR:UPLOADFAILED','timestamp'=>now()));
+                print $result;
+            }
+        }
+    }
+
+    public function pickuppic_post(){
 
         $api_key = $this->get('key');
 
