@@ -884,11 +884,21 @@ class V2 extends REST_Controller {
 
         $dt = json_decode($in, true);
 
+        $orders = json_decode($dt['orders'], true);
 
+        foreach($orders as $k){
 
-        foreach ($dt as $k) {
-            if(isset($k->pic_address_body )){
-                file_put_contents($pu_dir.$k->pic_address, $k->pic_address_body );
+            if(isset( $k['pic_address_body'] )){
+                file_put_contents($pu_dir.$k['pic_address'], base64_decode( $k['pic_address_body']) );
+            }
+            if(isset( $k['pic_1_body'] )){
+                file_put_contents($pu_dir.$k['pic_1'], base64_decode( $k['pic_1_body']) );
+            }
+            if(isset( $k['pic_2_body'] )){
+                file_put_contents($pu_dir.$k['pic_2'], base64_decode( $k['pic_2_body']) );
+            }
+            if(isset( $k['pic_3_body'] )){
+                file_put_contents($pu_dir.$k['pic_3'], base64_decode( $k['pic_3_body']) );
             }
         }
 
