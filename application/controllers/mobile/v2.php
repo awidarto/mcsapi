@@ -887,8 +887,8 @@ class V2 extends REST_Controller {
 
 
         foreach ($dt as $k) {
-            if(isset($k['pic_address_body'])){
-                file_put_contents($pu_dir.$k['pic_address'], $k['pic_address_body']);
+            if(isset($k->pic_address_body )){
+                file_put_contents($pu_dir.$k->pic_address, $k->pic_address_body );
             }
         }
 
