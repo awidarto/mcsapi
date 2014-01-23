@@ -884,6 +884,9 @@ class V2 extends REST_Controller {
 
         file_put_contents( $pu_dir.$filename.'.json' , $in);
 
+        $result = json_encode(array('status'=>'OK:DATASENT','timestamp'=>now()));
+        print $result;
+
     }
 
 
