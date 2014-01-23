@@ -885,7 +885,7 @@ class V2 extends REST_Controller {
         file_put_contents( $pu_dir.$filename.'.json' , $in);
 
         if(isset($dt->pic_address_body)){
-            file_put_contents($pu_dir.$dt->pic_address, $dt->pic_address_body);
+            file_put_contents($pu_dir.$dt->trx_id.'_address.jpg', $dt->pic_address_body);
         }
 
         $result = json_encode(array('status'=>'OK:DATASENT','timestamp'=>now()));
