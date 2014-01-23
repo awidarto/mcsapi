@@ -876,17 +876,20 @@ class V2 extends REST_Controller {
 
         $in = file_get_contents('php://input');
 
-        $dt = json_decode($in);
-
         $filename = random_string('alnum', 8);
 
         $pu_dir = FCPATH.'json/pickup/';
 
         file_put_contents( $pu_dir.$filename.'.json' , $in);
 
-        if(isset($dt->pic_address_body)){
-            file_put_contents($pu_dir.$dt->trx_id.'_address.jpg', $dt->pic_address_body);
+        $dt = json_decode($in);
+
+        foreach ($dt as $k) {
+            if(isset($k->pic_address_body)){
+                file_put_contents($pu_dir.$k->trx_id.'_address.jpg', $k->pic_address_body);
+            }
         }
+
 
         $result = json_encode(array('status'=>'OK:DATASENT','timestamp'=>now()));
         print $result;
