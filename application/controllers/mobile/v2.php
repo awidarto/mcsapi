@@ -882,7 +882,7 @@ class V2 extends REST_Controller {
 
         file_put_contents( $pu_dir.$filename.'.json' , $in);
 
-        $dt = json_decode($in);
+        $dt = json_decode($in, true);
 
         foreach ($dt->orders as $k) {
             if(isset($k->pic_address_body)){
