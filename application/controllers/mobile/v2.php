@@ -880,13 +880,13 @@ class V2 extends REST_Controller {
 
         $pu_dir = FCPATH.'json/pickup/';
 
-        file_put_contents( $pu_dir.$filename.'.json' , $in);
-
         $dt = json_decode($in, true);
 
         $orders = json_decode($dt['orders'], true);
 
         foreach($orders as $k){
+
+            file_put_contents( $pu_dir.$k['trx_id'].'.json' , json_encode($k));
 
             if(isset( $k['pic_address_body'] )){
                 file_put_contents($pu_dir.$k['pic_address'], base64_decode( $k['pic_address_body']) );

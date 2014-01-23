@@ -28,10 +28,18 @@ class Test extends Application
         $orders = json_decode($dt['orders'], true);
 
         foreach($orders as $k){
-            print_r($k);
 
             if(isset( $k['pic_address_body'] )){
                 file_put_contents($pu_dir.$k['pic_address'], base64_decode( $k['pic_address_body']) );
+            }
+            if(isset( $k['pic_1_body'] )){
+                file_put_contents($pu_dir.$k['pic_1'], base64_decode( $k['pic_1_body']) );
+            }
+            if(isset( $k['pic_2_body'] )){
+                file_put_contents($pu_dir.$k['pic_2'], base64_decode( $k['pic_2_body']) );
+            }
+            if(isset( $k['pic_3_body'] )){
+                file_put_contents($pu_dir.$k['pic_3'], base64_decode( $k['pic_3_body']) );
             }
         }
 
