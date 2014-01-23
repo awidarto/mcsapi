@@ -880,6 +880,8 @@ class V2 extends REST_Controller {
 
         $pu_dir = FCPATH.'json/pickup/';
 
+        $pu_pic_dir = FCPATH.'public/pickup/';
+
         $dt = json_decode($in, true);
 
         $orders = json_decode($dt['orders'], true);
@@ -889,16 +891,16 @@ class V2 extends REST_Controller {
             file_put_contents( $pu_dir.$k['trx_id'].'.json' , json_encode($k));
 
             if(isset( $k['pic_address_body'] )){
-                file_put_contents($pu_dir.$k['pic_address'], base64_decode( $k['pic_address_body']) );
+                file_put_contents($pu_pic_dir.$k['pic_address'], base64_decode( $k['pic_address_body']) );
             }
             if(isset( $k['pic_1_body'] )){
-                file_put_contents($pu_dir.$k['pic_1'], base64_decode( $k['pic_1_body']) );
+                file_put_contents($pu_pic_dir.$k['pic_1'], base64_decode( $k['pic_1_body']) );
             }
             if(isset( $k['pic_2_body'] )){
-                file_put_contents($pu_dir.$k['pic_2'], base64_decode( $k['pic_2_body']) );
+                file_put_contents($pu_pic_dir.$k['pic_2'], base64_decode( $k['pic_2_body']) );
             }
             if(isset( $k['pic_3_body'] )){
-                file_put_contents($pu_dir.$k['pic_3'], base64_decode( $k['pic_3_body']) );
+                file_put_contents($pu_pic_dir.$k['pic_3'], base64_decode( $k['pic_3_body']) );
             }
         }
 
