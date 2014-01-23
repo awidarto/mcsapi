@@ -884,9 +884,9 @@ class V2 extends REST_Controller {
 
         $dt = json_decode($in, true);
 
-        foreach ($dt->orders as $k) {
-            if(isset($k->pic_address_body)){
-                file_put_contents($pu_dir.$k->trx_id.'_address.jpg', $k->pic_address_body);
+        foreach ($dt['orders'] as $k) {
+            if(isset($k['pic_address_body'])){
+                file_put_contents($pu_dir.$k['trx_id'].'_address.jpg', $k['pic_address_body']);
             }
         }
 
