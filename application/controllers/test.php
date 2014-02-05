@@ -147,6 +147,46 @@ class Test extends Application
 
     }
 
+    public function jt(){
+        $pu_file = FCPATH.'json/pickup/incoming.json';
+        $in = file_get_contents($pu_file);
+
+        //$in = stripslashes($in);
+
+        print $in;
+
+        $data = json_decode($in, true);
+
+        var_dump($data);
+
+        $orders = json_decode($data['orders']);
+
+        var_dump($orders);
+
+        switch (json_last_error()) {
+            case JSON_ERROR_NONE:
+                echo ' - No errors';
+            break;
+            case JSON_ERROR_DEPTH:
+                echo ' - Maximum stack depth exceeded';
+            break;
+            case JSON_ERROR_STATE_MISMATCH:
+                echo ' - Underflow or the modes mismatch';
+            break;
+            case JSON_ERROR_CTRL_CHAR:
+                echo ' - Unexpected control character found';
+            break;
+            case JSON_ERROR_SYNTAX:
+                echo ' - Syntax error, malformed JSON';
+            break;
+            case JSON_ERROR_UTF8:
+                echo ' - Malformed UTF-8 characters, possibly incorrectly encoded';
+            break;
+            default:
+                echo ' - Unknown error';
+            break;
+        }
+    }
 
 
 }
