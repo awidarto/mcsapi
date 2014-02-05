@@ -955,6 +955,8 @@ class V2 extends REST_Controller {
 
         foreach($orders as $k){
 
+            print_r($k);
+
             $orderitem = $this->pu_order_map;
 
             $app = $this->get_key_info_id($k['app_id']);
@@ -976,7 +978,9 @@ class V2 extends REST_Controller {
             $orderitem['pic_2'] = $k['pic_2'];
             $orderitem['pic_3'] = $k['pic_3'];
 
-            $inres = $this->db->insert($this->config->item('incoming_delivery_table'),$orderitem);
+            print_r($orderitem);
+
+            //$inres = $this->db->insert($this->config->item('incoming_delivery_table'),$orderitem);
             $sequence = $this->db->insert_id();
             $delivery_id = get_delivery_id($sequence,$app->merchant_id);
 
@@ -986,11 +990,11 @@ class V2 extends REST_Controller {
                 $item['ordertime'] = $orderitem['ordertime'];
                 $item['delivery_id'] = $delivery_id;
                 $item['unit_sequence'] = 1;
-                $item['unit_description'] = '[PU] '$k['recipient_name'];
+                $item['unit_description'] = '[PU] '.$k['recipient_name'];
                 $item['unit_price'] = $k['unit_price'];
                 $item['unit_quantity'] = 1;
 
-                $rs = $this->db->insert($this->config->item('delivery_details_table'),$item);
+                //$rs = $this->db->insert($this->config->item('delivery_details_table'),$item);
 
 
             file_put_contents( $pu_dir.$k['trx_id'].'.json' , json_encode($k));
