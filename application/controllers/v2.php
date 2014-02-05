@@ -655,6 +655,21 @@ class V2 extends REST_Controller {
         }
     }
 
+    private function get_key_info_id($id){
+        if(!is_null($key)){
+            $this->db->where('id',$id);
+            $result = $this->db->get($this->config->item('applications_table'));
+            if($result->num_rows() > 0){
+                $row = $result->row();
+                return $row;
+            }else{
+                return false;
+            }
+        }else{
+            return false;
+        }
+    }
+
     private function get_dev_info($key){
         if(!is_null($key)){
             $this->db->where('key',$key);

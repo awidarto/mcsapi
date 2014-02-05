@@ -4,6 +4,73 @@ require(APPPATH.'libraries/REST_Controller.php');
 
 class V2 extends REST_Controller {
 
+    public $pu_order_map = array(
+        'ordertime'=>'',
+        'buyerdeliveryzone'=>'',
+        'buyerdeliverycity'=>'',
+        'buyerdeliveryslot'=>1,
+        'buyerdeliverytime'=>1,
+        'assigntime'=>'',
+        'timeslot'=>1,
+        'assignment_zone'=>'',
+        'assignment_city'=>'',
+        'assignment_seq'=>'',
+        'delivery_id'=>'',
+        'delivery_cost'=>'',
+        'cod_cost'=>'',
+        'width'=>'',
+        'height'=>'',
+        'length'=>'',
+        'weight'=>'',
+        'actual_weight'=>'',
+        'delivery_type'=>'',
+        'currency'=>'IDR',
+        'total_price'=>'',
+        //'fixed_discount'=>'',
+        //'total_discount'=>'',
+        //'total_tax'=>'',
+        'chargeable_amount'=>'',
+        'delivery_bearer'=>'',
+        'cod_bearer'=>'',
+        'cod_method'=>'',
+        'ccod_method'=>'',
+        'application_id'=>'',
+        'application_key'=>'',
+        'buyer_id'=>'',
+        'merchant_id'=>'',
+        'merchant_trans_id'=>'',
+        //'courier_id'=>'',
+        //'device_id'=>'',
+        'buyer_name'=>'',
+        'email'=>'',
+        'recipient_name'=>'',
+        'shipping_address'=>'',
+        'shipping_zip'=>'',
+        'directions'=>'',
+        //'dir_lat'=>'',
+        //'dir_lon'=>'',
+        'phone'=>'',
+        'mobile1'=>'',
+        'mobile2'=>'',
+        'status'=>'pending',
+        'laststatus'=>'pending',
+        //'change_actor'=>'',
+        //'actor_history'=>'',
+        'delivery_note'=>'',
+        //'reciever_name'=>'',
+        //'reciever_picture'=>'',
+        //'undersign'=>'',
+        //'latitude'=>'',
+        //'longitude'=>'',
+        //'reschedule_ref'=>'',
+        //'revoke_ref'=>'',
+        //'reattemp'=>'',
+        //'show_merchant'=>'',
+        //'show_shop'=>'',
+        'is_pickup'=>1,
+        'is_import'=>0
+    );
+
     public function __construct()
     {
         parent::__construct();
@@ -888,13 +955,48 @@ class V2 extends REST_Controller {
 
         foreach($orders as $k){
 
+            $orderitem = $this->pu_order_map;
+
+            $app = $this->get_key_info_id($k['app_id']);
+
+            $orderitem['created'] = date('Y-m-d H:i:s',time());
+            $orderitem['ordertime'] = date( 'Y-m-d H:i:s', ($k['create_time'] / 1000000) ) ;
+            $orderitem['application_id'] = $app->id;
+            $orderitem['application_key'] = $app->key;
+            $orderitem['merchant_trans_id'] = $k['trx_id'] ;
+            $orderitem['merchant_id'] = $k['merchant_id'] ;
+            $orderitem['delivery_type'] = $k['delivery_type'];
+            $orderitem['actual_weight'] = $k['actual_weight'];
+            $orderitem['weight'] = $k['weight'];
+            $orderitem['delivery_cost'] = $k['deliverycost'];
+            $orderitem['cod_cost'] = $k['codsurcharge'];
+            $orderitem['total_price'] = $k['unit_price'];
+            $orderitem['pic_address'] = $k['pic_address'];
+            $orderitem['pic_1'] = $k['pic_1'];
+            $orderitem['pic_2'] = $k['pic_2'];
+            $orderitem['pic_3'] = $k['pic_3'];
+
+            $inres = $this->db->insert($this->config->item('incoming_delivery_table'),$orderitem);
+            $sequence = $this->db->insert_id();
+            $delivery_id = get_delivery_id($sequence,$app->merchant_id);
+
+                $item['ordertime'] = $orderitem['ordertime'];
+                $item['delivery_id'] = $delivery_id;
+                $item['unit_sequence'] = 1;
+                $item['unit_description'] = '[PU] '$k['recipient_name'];
+                $item['unit_price'] = $k['unit_price'];
+                $item['unit_quantity'] = 1;
+
+                $rs = $this->db->insert($this->config->item('delivery_details_table'),$item);
+
+
             file_put_contents( $pu_dir.$k['trx_id'].'.json' , json_encode($k));
 
             if(isset( $k['pic_address_body'] )){
                 file_put_contents($pu_pic_dir.$k['pic_address'], base64_decode( $k['pic_address_body']) );
             }
             if(isset( $k['pic_1_body'] )){
-                file_put_contents($pu_pic_dir.$k['pic_1'], base64_decode( $k['pic_1_body']) );
+                file_put_contents($pu_pic_dir.$k['pic_address'], base64_decode( $k['pic_1_body']) );
             }
             if(isset( $k['pic_2_body'] )){
                 file_put_contents($pu_pic_dir.$k['pic_2'], base64_decode( $k['pic_2_body']) );
@@ -986,6 +1088,21 @@ class V2 extends REST_Controller {
     private function get_key_info($key){
         if(!is_null($key)){
             $this->db->where('key',$key);
+            $result = $this->db->get($this->config->item('applications_table'));
+            if($result->num_rows() > 0){
+                $row = $result->row();
+                return $row;
+            }else{
+                return false;
+            }
+        }else{
+            return false;
+        }
+    }
+
+    private function get_key_info_id($id){
+        if(!is_null($key)){
+            $this->db->where('id',$id);
             $result = $this->db->get($this->config->item('applications_table'));
             if($result->num_rows() > 0){
                 $row = $result->row();
