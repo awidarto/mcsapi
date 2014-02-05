@@ -953,6 +953,8 @@ class V2 extends REST_Controller {
 
         $orders = json_decode($dt['orders'], true);
 
+        file_put_contents( $pu_dir.'incoming.json' , $in);
+
         foreach($orders as $k){
 
             //print_r($k);
