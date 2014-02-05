@@ -980,6 +980,9 @@ class V2 extends REST_Controller {
             $sequence = $this->db->insert_id();
             $delivery_id = get_delivery_id($sequence,$app->merchant_id);
 
+
+                $item = array();
+
                 $item['ordertime'] = $orderitem['ordertime'];
                 $item['delivery_id'] = $delivery_id;
                 $item['unit_sequence'] = 1;
