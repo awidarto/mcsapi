@@ -955,7 +955,7 @@ class V2 extends REST_Controller {
 
         foreach($orders as $k){
 
-            print_r($k);
+            //print_r($k);
 
             $orderitem = $this->pu_order_map;
 
@@ -978,7 +978,7 @@ class V2 extends REST_Controller {
             $orderitem['pic_2'] = $k['pic_2'];
             $orderitem['pic_3'] = $k['pic_3'];
 
-            print_r($orderitem);
+            //print_r($orderitem);
 
             //$inres = $this->db->insert($this->config->item('incoming_delivery_table'),$orderitem);
             $sequence = $this->db->insert_id();
