@@ -11,7 +11,7 @@ class V2 extends REST_Controller {
         'buyerdeliveryslot'=>1,
         'buyerdeliverytime'=>1,
         'assigntime'=>'',
-        'timeslot'=>1,
+        'assignment_timeslot'=>1,
         'assignment_zone'=>'',
         'assignment_city'=>'',
         'assignment_seq'=>'',
@@ -973,6 +973,9 @@ class V2 extends REST_Controller {
             $orderitem['actual_weight'] = $k['actual_weight'];
             $orderitem['weight'] = $k['weight'];
             $orderitem['delivery_cost'] = $k['deliverycost'];
+            $orderitem['buyerdeliverycity'] = $k['buyerdeliverycity'];
+            $orderitem['buyerdeliveryzone'] = $k['buyerdeliveryzone'];
+
             $orderitem['cod_cost'] = $k['codsurcharge'];
             $orderitem['total_price'] = $k['unit_price'];
             $orderitem['pic_address'] = $k['pic_address'];
@@ -982,10 +985,11 @@ class V2 extends REST_Controller {
 
             //print_r($orderitem);
 
-            //$inres = $this->db->insert($this->config->item('incoming_delivery_table'),$orderitem);
+            $inres = $this->db->insert($this->config->item('incoming_delivery_table'),$orderitem);
             $sequence = $this->db->insert_id();
             $delivery_id = get_delivery_id($sequence,$app->merchant_id);
 
+                $this->db->where('id',$sequence)->update($this->config->item('incoming_delivery_table'),array('delivery_id'=>$delivery_id));
 
                 $item = array();
 
@@ -996,7 +1000,9 @@ class V2 extends REST_Controller {
                 $item['unit_price'] = $k['unit_price'];
                 $item['unit_quantity'] = 1;
 
-                //$rs = $this->db->insert($this->config->item('delivery_details_table'),$item);
+                $item['unit_total'] = $item['unit_quantity'] * $k['unit_price'];
+
+                $rs = $this->db->insert($this->config->item('delivery_details_table'),$item);
 
 
             file_put_contents( $pu_dir.$k['trx_id'].'.json' , json_encode($k));
@@ -1110,7 +1116,7 @@ class V2 extends REST_Controller {
     }
 
     private function get_key_info_id($id){
-        if(!is_null($key)){
+        if(!is_null($id)){
             $this->db->where('id',$id);
             $result = $this->db->get($this->config->item('applications_table'));
             if($result->num_rows() > 0){
