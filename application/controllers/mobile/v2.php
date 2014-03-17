@@ -951,6 +951,9 @@ class V2 extends REST_Controller {
 
         $dt = json_decode($in, true);
 
+        $pickup_person = $dt['courier_name'];
+        $pickup_device = $dt['dev_id'];
+
         $orders = json_decode($dt['orders'], true);
 
         file_put_contents( $pu_dir.'incoming.json' , $in);
@@ -982,12 +985,19 @@ class V2 extends REST_Controller {
             $orderitem['pic_1'] = $k['pic_1'];
             $orderitem['pic_2'] = $k['pic_2'];
             $orderitem['pic_3'] = $k['pic_3'];
+            $orderitem['pickup_dev_id'] = $pickup_device;
+            $orderitem['pickup_person'] = $pickup_person;
+
+            $orderitem['is_pickup'] = 1;
 
             //print_r($orderitem);
 
-            $inres = $this->db->insert($this->config->item('incoming_delivery_table'),$orderitem);
-            $sequence = $this->db->insert_id();
-            $delivery_id = get_delivery_id($sequence,$app->merchant_id);
+            if(record_exists($this->config->item(), 'merchant_trans_id' , $k['trx_id']) == false){
+
+
+                $inres = $this->db->insert($this->config->item('incoming_delivery_table'),$orderitem);
+                $sequence = $this->db->insert_id();
+                $delivery_id = get_delivery_id($sequence,$app->merchant_id);
 
                 $this->db->where('id',$sequence)->update($this->config->item('incoming_delivery_table'),array('delivery_id'=>$delivery_id));
 
@@ -1003,6 +1013,7 @@ class V2 extends REST_Controller {
                 $item['unit_total'] = $item['unit_quantity'] * $k['unit_price'];
 
                 $rs = $this->db->insert($this->config->item('delivery_details_table'),$item);
+            }
 
 
             file_put_contents( $pu_dir.$k['trx_id'].'.json' , json_encode($k));

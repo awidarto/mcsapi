@@ -1293,4 +1293,16 @@ function getrangedatacountarray($year,$from,$to,$where = null,$merchant_id = nul
 	return $series;
 }
 
+function record_exists($table, $key, $value)
+{
+    $this->db->where($key,$value);
+    $query = $this->db->get($table);
+    if ($query->num_rows() > 0){
+        return true;
+    }
+    else{
+        return false;
+    }
+}
+
 ?>
