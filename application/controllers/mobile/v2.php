@@ -992,7 +992,7 @@ class V2 extends REST_Controller {
 
             //print_r($orderitem);
 
-            if(record_exists($this->config->item(), 'merchant_trans_id' , $k['trx_id']) == false){
+            if($this->record_exists($this->config->item('incoming_delivery_table'), 'merchant_trans_id' , $k['trx_id']) == false){
 
 
                 $inres = $this->db->insert($this->config->item('incoming_delivery_table'),$orderitem);
@@ -1232,6 +1232,19 @@ class V2 extends REST_Controller {
             return false;
         }
     }
+
+    private function record_exists($table, $key, $value)
+    {
+        $this->db->where($key,$value);
+        $query = $this->db->get($table);
+        if ($query->num_rows() > 0){
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
+
 
 }
 
