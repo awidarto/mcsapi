@@ -433,6 +433,39 @@ class V2 extends REST_Controller {
                     $args = '';
                     $this->log_access($api_key, __METHOD__ ,$result,$args);
 
+                }else if($status = $this->get('status')){
+
+                    $this->db->select('buyerdeliverytime,
+                        buyerdeliveryzone,
+                        buyerdeliverycity,
+                        merchant_id,
+                        merchant_trans_id,
+                        delivery_id,
+                        status,
+                        delivery_note,
+                        shipping_address,
+                        buyer_name,
+                        recipient_name,
+                        reciever_name,
+                        latitude,
+                        longitude
+                        ')
+                        ->from($this->config->item('incoming_delivery_table'))
+                        ->where('merchant_id',$app->merchant_id)
+                        ->where('status',$status);
+
+                    $orders = $this->db->get();
+                    $orders = $orders->result_array();
+
+                    $result = json_encode(array('status'=>'OK:ORDERRETRIEVED','timestamp'=>now(),'orders'=>$orders));
+
+                    //print $result;
+
+                    $this->response(array('status'=>'OK:ORDERRETRIEVED','timestamp'=>now(),'orders'=>$orders),200);
+
+                    $args = '';
+                    $this->log_access($api_key, __METHOD__ ,$result,$args);
+
                 }
             }
         }
