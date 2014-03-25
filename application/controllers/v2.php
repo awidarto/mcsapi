@@ -359,7 +359,83 @@ class V2 extends REST_Controller {
     }
 
     function order_get(){
-        $this->response(array('message'=>'Not Implemented'),400);
+        $api_key = $this->get('key');
+
+        if(is_null($api_key) || $api_key == ''){
+            $this->response(array('status'=>'ERR:NOKEY','timestamp'=>now()),400);
+        }else{
+            $app = $this->get_key_info(trim($api_key));
+
+            if($app == false){
+                $this->response(array('status'=>'ERR:INVALIDKEY','timestamp'=>now()),400);
+            }else{
+                if($checkdate = $this->get('date')){
+                    $this->db->select('buyerdeliverytime,
+                        buyerdeliveryzone,
+                        buyerdeliverycity,
+                        merchant_id,
+                        merchant_trans_id,
+                        delivery_id,
+                        status,
+                        delivery_note,
+                        shipping_address,
+                        buyer_name,
+                        recipient_name,
+                        reciever_name,
+                        latitude,
+                        longitude
+                        ')
+                        ->from($this->config->item('incoming_delivery_table'))
+                        ->where('merchant_id',$app->merchant_id)
+                        ->like('buyerdeliverytime',$checkdate,'after');
+
+                    $orders = $this->db->get();
+                    $orders = $orders->result_array();
+
+                    $result = json_encode(array('status'=>'OK:ORDERRETRIEVED','timestamp'=>now(),'orders'=>$orders));
+
+                    //print $result;
+
+                    $this->response(array('status'=>'OK:ORDERRETRIEVED','timestamp'=>now(),'orders'=>$orders),200);
+
+                    $args = '';
+                    $this->log_access($api_key, __METHOD__ ,$result,$args);
+                }else if($trx_id = $this->get('trx')){
+
+                    $this->db->select('buyerdeliverytime,
+                        buyerdeliveryzone,
+                        buyerdeliverycity,
+                        merchant_id,
+                        merchant_trans_id,
+                        delivery_id,
+                        status,
+                        delivery_note,
+                        shipping_address,
+                        buyer_name,
+                        recipient_name,
+                        reciever_name,
+                        latitude,
+                        longitude
+                        ')
+                        ->from($this->config->item('incoming_delivery_table'))
+                        ->where('merchant_id',$app->merchant_id)
+                        ->where('merchant_trans_id',$trx_id);
+
+                    $orders = $this->db->get();
+                    $orders = $orders->result_array();
+
+                    $result = json_encode(array('status'=>'OK:ORDERRETRIEVED','timestamp'=>now(),'orders'=>$orders));
+
+                    //print $result;
+
+                    $this->response(array('status'=>'OK:ORDERRETRIEVED','timestamp'=>now(),'orders'=>$orders),200);
+
+                    $args = '';
+                    $this->log_access($api_key, __METHOD__ ,$result,$args);
+
+                }
+            }
+        }
     }
 
     function order_put(){
