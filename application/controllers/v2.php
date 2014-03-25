@@ -376,6 +376,7 @@ class V2 extends REST_Controller {
                         merchant_id,
                         merchant_trans_id,
                         delivery_id,
+                        deliverytime,
                         status,
                         delivery_note,
                         shipping_address,
@@ -388,6 +389,10 @@ class V2 extends REST_Controller {
                         ->from($this->config->item('incoming_delivery_table'))
                         ->where('merchant_id',$app->merchant_id)
                         ->like('buyerdeliverytime',$checkdate,'after');
+
+                        if($status = $this->get('status')){
+                            $this->db->where('status',$status);
+                        }
 
                     $orders = $this->db->get();
                     $orders = $orders->result_array();
@@ -408,6 +413,7 @@ class V2 extends REST_Controller {
                         merchant_id,
                         merchant_trans_id,
                         delivery_id,
+                        deliverytime,
                         status,
                         delivery_note,
                         shipping_address,
@@ -421,8 +427,13 @@ class V2 extends REST_Controller {
                         ->where('merchant_id',$app->merchant_id)
                         ->where('merchant_trans_id',$trx_id);
 
+                        if($status = $this->get('status')){
+                            $this->db->where('status',$status);
+                        }
+
                     $orders = $this->db->get();
                     $orders = $orders->result_array();
+
 
                     $result = json_encode(array('status'=>'OK:ORDERRETRIEVED','timestamp'=>now(),'orders'=>$orders));
 
@@ -433,7 +444,11 @@ class V2 extends REST_Controller {
                     $args = '';
                     $this->log_access($api_key, __METHOD__ ,$result,$args);
 
-                }else if($status = $this->get('status')){
+                }
+
+                if( !$this->get('trx') && !$this->get('date') && $this->get('status')){
+
+                    $status = $this->get('status');
 
                     $this->db->select('buyerdeliverytime,
                         buyerdeliveryzone,
@@ -441,6 +456,7 @@ class V2 extends REST_Controller {
                         merchant_id,
                         merchant_trans_id,
                         delivery_id,
+                        deliverytime,
                         status,
                         delivery_note,
                         shipping_address,
@@ -456,6 +472,7 @@ class V2 extends REST_Controller {
 
                     $orders = $this->db->get();
                     $orders = $orders->result_array();
+
 
                     $result = json_encode(array('status'=>'OK:ORDERRETRIEVED','timestamp'=>now(),'orders'=>$orders));
 
