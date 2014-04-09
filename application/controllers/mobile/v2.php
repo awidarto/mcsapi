@@ -958,6 +958,8 @@ class V2 extends REST_Controller {
 
         file_put_contents( $pu_dir.'incoming.json' , $in);
 
+        $sorders = array();
+
         foreach($orders as $k){
 
             //print_r($k);
@@ -989,6 +991,8 @@ class V2 extends REST_Controller {
             $orderitem['pickup_person'] = $pickup_person;
 
             $orderitem['is_pickup'] = 1;
+
+            $sorders[] = $k['trx_id'];
 
             //print_r($orderitem);
 
@@ -1033,7 +1037,7 @@ class V2 extends REST_Controller {
         }
 
 
-        $result = json_encode(array('status'=>'OK:DATASENT','timestamp'=>now()));
+        $result = json_encode(array('status'=>'OK:DATASENT','orders'=>$sorders,'timestamp'=>now()));
         print $result;
 
     }
