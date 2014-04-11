@@ -951,8 +951,8 @@ class V2 extends REST_Controller {
 
         $dt = json_decode($in, true);
 
-        $pickup_person = $dt['courier_name'];
-        $pickup_device = $dt['dev_id'];
+        $pickup_person = (isset($dt['courier_name']))?$dt['courier_name']:'no name';
+        $pickup_device = (isset($dt['dev_id']))?$dt['dev_id']:'JY-PICKUPDEV';
 
         $orders = json_decode($dt['orders'], true);
 
