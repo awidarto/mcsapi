@@ -969,7 +969,8 @@ class V2 extends REST_Controller {
             $app = $this->get_key_info_id($k['app_id']);
 
             $orderitem['created'] = date('Y-m-d H:i:s',time());
-            $orderitem['ordertime'] = date( 'Y-m-d H:i:s', ($k['create_time'] / 1000000) ) ;
+            //$orderitem['ordertime'] = date( 'Y-m-d H:i:s', ($k['create_time'] / 1000000) ) ;
+            $orderitem['ordertime'] = $k['create_datetime'];
             $orderitem['application_id'] = $app->id;
             $orderitem['application_key'] = $app->key;
             $orderitem['merchant_trans_id'] = $k['trx_id'] ;
