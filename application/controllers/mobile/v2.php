@@ -968,6 +968,23 @@ class V2 extends REST_Controller {
 
             $app = $this->get_key_info_id($k['app_id']);
 
+/*
+"create_time\":\"1397307581\"
+"create_datetime\":\"2014-04-12 12:59:41\"
+"merchant_id\":4664
+"app_id\":72
+"trx_id\":\"PU_YCOGXUAHDUNH\"
+"delivery_type\":\"CCOD\"
+"buyerdeliveryzone\":\"Bantar Gebang\"
+"buyerdeliverycity\":\"Bekasi Kota\"
+"buyer_name\":\"Pembeli\"
+"recipient_name\":\"Penerima\"
+"weight\":\"6500\"
+"actual_weight\":1
+"unit_price\":12345678
+"deliverycost\":6500
+"codsurcharge\":15000
+*/
             $orderitem['created'] = date('Y-m-d H:i:s',time());
             //$orderitem['ordertime'] = date( 'Y-m-d H:i:s', ($k['create_time'] / 1000000) ) ;
             $orderitem['ordertime'] = $k['create_datetime'];
@@ -981,6 +998,8 @@ class V2 extends REST_Controller {
             $orderitem['delivery_cost'] = $k['deliverycost'];
             $orderitem['buyerdeliverycity'] = $k['buyerdeliverycity'];
             $orderitem['buyerdeliveryzone'] = $k['buyerdeliveryzone'];
+            $orderitem['recipient_name'] = $k['recipient_name'];
+            $orderitem['buyer_name'] = $k['buyer_name'];
 
             $orderitem['cod_cost'] = $k['codsurcharge'];
             $orderitem['total_price'] = $k['unit_price'];
@@ -1043,6 +1062,9 @@ class V2 extends REST_Controller {
 
     }
 
+    public function pickup_get(){
+
+    }
 
     public function uploadpic_post(){
 
