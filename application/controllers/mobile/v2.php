@@ -998,8 +998,8 @@ class V2 extends REST_Controller {
             $orderitem['delivery_cost'] = $k['deliverycost'];
             $orderitem['buyerdeliverycity'] = $k['buyerdeliverycity'];
             $orderitem['buyerdeliveryzone'] = $k['buyerdeliveryzone'];
-            $orderitem['recipient_name'] = $k['recipient_name'];
-            $orderitem['buyer_name'] = $k['buyer_name'];
+            $orderitem['recipient_name'] = (isset($k['recipient_name']))?$k['recipient_name']:'';
+            $orderitem['buyer_name'] = (isset($k['buyer_name']))?$k['buyer_name']:'';
 
             $orderitem['cod_cost'] = $k['codsurcharge'];
             $orderitem['total_price'] = $k['unit_price'];
