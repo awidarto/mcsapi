@@ -408,6 +408,37 @@ class V2 extends REST_Controller {
     }
 
     public function order_get(){
+        $args = '';
+
+        $api_key = $this->get('key');
+        $mobile_type = $this->get('type');
+        $date = $this->get('date');
+
+        if(is_null($api_key)){
+            $this->response(array('status'=>'ERR:NOKEY','timestamp'=>now()),400);
+        }else{
+
+
+            if(isset($date)){
+                $datestring = $date;
+                $date = date_parse($date);
+                if ($date['error_count'] == 0 && checkdate($date['month'], $date['day'], $date['year'])){
+                    $onehourbefore = strtotime($datestring) - 60 * 60;
+                }else{
+                    $onehourbefore = time() - 60*60;
+                }
+            }
+
+            if($type == 'pickup'){
+                $orders = $this->db->where('toscan', 1)
+                    ->where('created < ', date('Y-m-d H:i:s', $onehourbefore) )
+                    ->where('created > ', date('Y-m-d 00:00:00', $onehourbefore) )
+                    ->get( $this->config->item('incoming_delivery_table'));
+            }else{
+
+            }
+        }
+
         $this->response(array('message'=>'Not Implemented'),400);
     }
 
