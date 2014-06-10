@@ -206,7 +206,7 @@ class V2 extends REST_Controller {
 
                 $delivery_id = get_delivery_id($sequence,$app->merchant_id);
 
-                $nedata['fullname'] = $in->buyer_name;
+                $nedata['fullname'] = (isset($in->buyer_name))?$in->buyer_name:'no name';
                 $nedata['merchant_trx_id'] = trim($transaction_id);
                 $nedata['delivery_id'] = $delivery_id;
                 $nedata['merchantname'] = $app->application_name;
