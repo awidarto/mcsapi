@@ -81,28 +81,33 @@ class V2 extends REST_Controller {
 
                 }else{
 
-                    if($in->email == '' || !isset($in->email) || $in->email == 'noemail'){
+                    if(isset($in->email)){
 
-                        $in->email = 'noemail';
-                        $is_new = true;
-                        if( trim($in->phone.$in->mobile1.$in->mobile2) != ''){
-                            if($buyer = $this->check_phone($in->phone,$in->mobile1,$in->mobile2)){
-                                $buyer_id = $buyer['id'];
-                                $is_new = false;
+                        if($in->email == '' || $in->email == 'noemail'){
+
+                            $in->email = 'noemail';
+                            $is_new = true;
+                            if( trim($in->phone.$in->mobile1.$in->mobile2) != ''){
+                                if($buyer = $this->check_phone($in->phone,$in->mobile1,$in->mobile2)){
+                                    $buyer_id = $buyer['id'];
+                                    $is_new = false;
+                                }
                             }
+
+                        }else if($buyer = $this->check_email($in->email)){
+
+                            $buyer_id = $buyer['id'];
+                            $is_new = false;
+
+                        }else if($buyer = $this->check_phone($in->phone,$in->mobile1,$in->mobile2)){
+
+                            $buyer_id = $buyer['id'];
+                            $is_new = false;
+
                         }
 
-                    }else if($buyer = $this->check_email($in->email)){
-
-                        $buyer_id = $buyer['id'];
-                        $is_new = false;
-
-                    }else if($buyer = $this->check_phone($in->phone,$in->mobile1,$in->mobile2)){
-
-                        $buyer_id = $buyer['id'];
-                        $is_new = false;
-
                     }
+
 
                 }
 
@@ -114,11 +119,11 @@ class V2 extends REST_Controller {
                 if($is_new){
                     $buyer_username = substr(strtolower(str_replace(' ','',$in->buyer_name)),0,6).random_string('numeric', 4);
                     $dataset['username'] = $buyer_username;
-                    $dataset['email'] = $in->email;
-                    $dataset['phone'] = $in->phone;
-                    $dataset['mobile1'] = $in->mobile1;
-                    $dataset['mobile2'] = $in->mobile2;
-                    $dataset['fullname'] = $in->buyer_name;
+                    $dataset['email'] = (isset($in->email))?$in->email:'noemail';
+                    $dataset['phone'] = (isset($in->phone))?$in->phone:'';
+                    $dataset['mobile1'] = (isset($in->mobile1))?$in->mobile1:'';
+                    $dataset['mobile2'] = (isset($in->mobile2))?$in->mobile2:'';
+                    $dataset['fullname'] = (isset($in->buyer_name))?$in->buyer_name:'no name';
                     $password = random_string('alnum', 8);
                     $dataset['password'] = $this->ag_auth->salt($password);
                     $dataset['created'] = date('Y-m-d H:i:s',time());
@@ -128,11 +133,11 @@ class V2 extends REST_Controller {
                     $dataset['mobile']
                     */
 
-                    $dataset['street'] = $in->shipping_address;
-                    $dataset['district'] = $in->buyerdeliveryzone;
-                    $dataset['city'] = $in->buyerdeliverycity;
+                    $dataset['street'] = (isset($in->shipping_address))?$in->shipping_address:'no address';
+                    $dataset['district'] = (isset($in->buyerdeliveryzone))?$in->buyerdeliveryzone:'';
+                    $dataset['city'] = (isset($in->buyerdeliverycity))?$in->buyerdeliverycity:'';
                     $dataset['country'] = 'Indonesia';
-                    $dataset['zip'] = $in->zip;
+                    $dataset['zip'] = (isset($in->zip))?$in->zip:'';
 
                     //$buyer_id = $this->register_buyer($dataset);
                     $is_new = true;
@@ -146,10 +151,10 @@ class V2 extends REST_Controller {
                 $order['merchant_id'] = $app->merchant_id;
                 $order['merchant_trans_id'] = trim($transaction_id);
 
-                $order['buyer_name'] = $in->buyer_name;
-                $order['recipient_name'] = $in->recipient_name;
-                $order['email'] = $in->email;
-                $order['directions'] = $in->directions;
+                $order['buyer_name'] = (isset($in->buyer_name))?$in->buyer_name:'no name';
+                $order['recipient_name'] = (isset($in->recipient_name))?$in->recipient_name:'no name';
+                $order['email'] = (isset($in->email))?$in->email:'noemail';
+                $order['directions'] = (isset($in->directions))?$in->directions:'';
                 //$order['dir_lat'] = $in->dir_lat;
                 //$order['dir_lon'] = $in->dir_lon;
                 $order['buyerdeliverytime'] = $in->buyerdeliverytime;
@@ -157,26 +162,26 @@ class V2 extends REST_Controller {
                 $order['buyerdeliveryzone'] = $in->buyerdeliveryzone;
                 $order['buyerdeliverycity'] = (is_null($in->buyerdeliverycity) || $in->buyerdeliverycity == '')?'Jakarta':$in->buyerdeliverycity;
 
-                $order['currency'] = $in->currency;
+                $order['currency'] = (isset($in->currency))?$in->currency:'';
                 $order['total_price'] = (isset($in->total_price))?$in->total_price:0;
                 $order['total_discount'] = (isset($in->total_discount))?$in->total_discount:0;
                 $order['total_tax'] = (isset($in->total_tax))?$in->total_tax:0;
-                $order['cod_cost'] = $in->cod_cost;
+                $order['cod_cost'] = (isset($in->cod_cost))?$in->cod_cost:0;
                 $order['chargeable_amount'] = (isset($in->chargeable_amount))?$in->chargeable_amount:0;
 
-                $order['shipping_address'] = $in->shipping_address;
-                $order['shipping_zip'] = $in->zip;
+                $order['shipping_address'] = (isset($in->shipping_address))?$in->shipping_address:'';
+                $order['shipping_zip'] = (isset($in->zip))?$in->zip:'';
                 $order['phone'] = $in->phone;
                 $order['mobile1'] = $in->mobile1;
                 $order['mobile2'] = $in->mobile2;
-                $order['status'] = $in->status;
+                $order['status'] = (isset($in->status))?$in->status:'pending';
 
-                $order['width'] = $in->width;
-                $order['height'] = $in->height;
-                $order['length'] = $in->length;
+                $order['width'] = (isset($in->width))?$in->width:0;
+                $order['height'] = (isset($in->height))?$in->height:0;
+                $order['length'] = (isset($in->length))?$in->length:0;
                 $order['weight'] = (isset($in->weight))?get_weight_tariff($in->weight, $in->delivery_type ,$app->id):0;
                 $order['actual_weight'] = (isset($in->weight))?$in->weight:0;
-                $order['delivery_type'] = $in->delivery_type;
+                $order['delivery_type'] = (isset($in->delivery_type))?$in->delivery_type:'Delivery Only';
                 $order['delivery_cost'] = (isset($in->delivery_cost))?$in->delivery_cost:0;
 
                 $order['cod_bearer'] = (isset($in->cod_bearer))?$in->cod_bearer:'merchant';
