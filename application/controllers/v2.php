@@ -157,10 +157,11 @@ class V2 extends REST_Controller {
                 $order['directions'] = (isset($in->directions))?$in->directions:'';
                 //$order['dir_lat'] = $in->dir_lat;
                 //$order['dir_lon'] = $in->dir_lon;
-                $order['buyerdeliverytime'] = $in->buyerdeliverytime;
-                $order['buyerdeliveryslot'] = $in->buyerdeliveryslot;
-                $order['buyerdeliveryzone'] = $in->buyerdeliveryzone;
-                $order['buyerdeliverycity'] = (is_null($in->buyerdeliverycity) || $in->buyerdeliverycity == '')?'Jakarta':$in->buyerdeliverycity;
+                $nextdate = date('Y-m-d H:i:s',time() + (60*60*24) );
+                $order['buyerdeliverytime'] = (isset($in->buyerdeliverytime))?$in->buyerdeliverytime:$nextdate;
+                $order['buyerdeliveryslot'] = (isset($in->buyerdeliveryslot))?$in->buyerdeliveryslot:1;
+                $order['buyerdeliveryzone'] = (isset($in->buyerdeliveryzone))?$in->buyerdeliveryzone:'Pondok Aren';
+                $order['buyerdeliverycity'] = (is_null($in->buyerdeliverycity) || $in->buyerdeliverycity == '')?'Tangerang Selatan':$in->buyerdeliverycity;
 
                 $order['currency'] = (isset($in->currency))?$in->currency:'';
                 $order['total_price'] = (isset($in->total_price))?$in->total_price:0;
