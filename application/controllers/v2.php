@@ -161,7 +161,7 @@ class V2 extends REST_Controller {
                 $order['buyerdeliverytime'] = (isset($in->buyerdeliverytime))?$in->buyerdeliverytime:$nextdate;
                 $order['buyerdeliveryslot'] = (isset($in->buyerdeliveryslot))?$in->buyerdeliveryslot:1;
                 $order['buyerdeliveryzone'] = (isset($in->buyerdeliveryzone))?$in->buyerdeliveryzone:'Pondok Aren';
-                $order['buyerdeliverycity'] = (is_null($in->buyerdeliverycity) || $in->buyerdeliverycity == '')?'Tangerang Selatan':$in->buyerdeliverycity;
+                $order['buyerdeliverycity'] = ( (isset($in->buyerdeliverycity) == false) || is_null($in->buyerdeliverycity) || $in->buyerdeliverycity == '')?'Tangerang Selatan':$in->buyerdeliverycity;
 
                 $order['currency'] = (isset($in->currency))?$in->currency:'';
                 $order['total_price'] = (isset($in->total_price))?$in->total_price:0;
