@@ -80,6 +80,10 @@ $config['trans_status_admin_devassigned'] = 'dev_assigned';
 $config['trans_status_admin_courierassigned'] = 'cr_assigned';
 $config['trans_status_admin_dispatched'] = 'dispatched';
 
+$config['trans_status_tobepickup'] = 'akan diambil';
+$config['trans_status_pickup'] = 'sudah diambil';
+
+
 /* API invalid status */
 
 $config['invalid_status'] = array(
