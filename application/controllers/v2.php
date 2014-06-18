@@ -232,32 +232,39 @@ class V2 extends REST_Controller {
                     $gt = 0;
 
 
-                if($in->trx_detail){
+                if(isset($in->trx_detail) && is_null($in->trx_detail) == false){
                     $seq = 0;
 
-                    foreach($in->trx_detail as $it){
-                        $item['ordertime'] = $order['ordertime'];
-                        $item['delivery_id'] = $delivery_id;
-                        $item['unit_sequence'] = $seq++;
-                        $item['unit_description'] = $it->unit_description;
-                        $item['unit_price'] = $it->unit_price;
-                        $item['unit_quantity'] = $it->unit_quantity;
-                        $item['unit_total'] = $it->unit_total;
-                        $item['unit_discount'] = $it->unit_discount;
+                    try{
 
-                        $rs = $this->db->insert($this->config->item('delivery_details_table'),$item);
+                        foreach($in->trx_detail as $it){
+                            $item['ordertime'] = $order['ordertime'];
+                            $item['delivery_id'] = $delivery_id;
+                            $item['unit_sequence'] = $seq++;
+                            $item['unit_description'] = $it->unit_description;
+                            $item['unit_price'] = $it->unit_price;
+                            $item['unit_quantity'] = $it->unit_quantity;
+                            $item['unit_total'] = $it->unit_total;
+                            $item['unit_discount'] = $it->unit_discount;
 
-                        $this->table->add_row(
-                            (int)$item['unit_sequence'] + 1,
-                            $item['unit_description'],
-                            $item['unit_quantity'],
-                            $item['unit_total']
-                        );
+                            $rs = $this->db->insert($this->config->item('delivery_details_table'),$item);
 
-                        $u_total = str_replace(array(',','.'), '', $item['unit_total']);
-                        $u_discount = str_replace(array(',','.'), '', $item['unit_discount']);
-                        $gt += (int)$u_total;
-                        $d += (int)$u_discount;
+                            $this->table->add_row(
+                                (int)$item['unit_sequence'] + 1,
+                                $item['unit_description'],
+                                $item['unit_quantity'],
+                                $item['unit_total']
+                            );
+
+                            $u_total = str_replace(array(',','.'), '', $item['unit_total']);
+                            $u_discount = str_replace(array(',','.'), '', $item['unit_discount']);
+                            $gt += (int)$u_total;
+                            $d += (int)$u_discount;
+
+                        }
+
+                    }catch(Exception $e){
+                        $exc = $e->getMessage();
 
                     }
 
