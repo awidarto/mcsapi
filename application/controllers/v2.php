@@ -54,7 +54,9 @@ class V2 extends REST_Controller {
 
                 $args = 'p='.$in;
 
-                $in = str_replace(array("\r","\n"), ' ', $in);
+                $invalidchar = array("\b","\f","\n","\r","\t");
+
+                $in = str_replace($invalidchar, ' ', $in);
 
                 $in = json_decode($in);
 
