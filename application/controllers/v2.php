@@ -264,7 +264,13 @@ class V2 extends REST_Controller {
                         }
 
                     }catch(Exception $e){
-                        $exc = $e->getMessage();
+
+                        $nedata['detail'] = false;
+
+                        $result = json_encode(array('status'=>'OK:ORDERPOSTEDNODETAIL','timestamp'=>now(),'delivery_id'=>$delivery_id));
+
+                        print $result;
+
 
                     }
 
