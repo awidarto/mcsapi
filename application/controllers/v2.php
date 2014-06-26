@@ -232,7 +232,7 @@ class V2 extends REST_Controller {
                     $gt = 0;
 
 
-                if(isset($in->trx_detail) && is_null($in->trx_detail) == false){
+                if(isset($in->trx_detail) && is_null($in->trx_detail) != ''){
                     $seq = 0;
 
                     try{
