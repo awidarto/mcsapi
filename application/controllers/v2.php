@@ -232,12 +232,15 @@ class V2 extends REST_Controller {
                     $gt = 0;
 
 
-                if(isset($in->trx_detail) && is_null($in->trx_detail) != ''){
+                if(isset($in->trx_detail) && is_array($in->trx_detail) ){
                     $seq = 0;
 
                     try{
 
                         foreach($in->trx_detail as $it){
+
+                            //print_r($it);
+
                             $item['ordertime'] = $order['ordertime'];
                             $item['delivery_id'] = $delivery_id;
                             $item['unit_sequence'] = $seq++;
