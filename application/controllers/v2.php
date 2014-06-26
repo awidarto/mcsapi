@@ -54,6 +54,8 @@ class V2 extends REST_Controller {
 
                 $args = 'p='.$in;
 
+                $in = str_replace(array("\r","\n"), ' ', $in);
+
                 $in = json_decode($in);
 
                 $buyer_id = 1;
