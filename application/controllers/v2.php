@@ -195,6 +195,8 @@ class V2 extends REST_Controller {
                 $order['cod_method'] = (isset($in->cod_method))?$in->cod_method:'cash';
                 $order['ccod_method'] = (isset($in->ccod_method))?$in->ccod_method:'full';
 
+                $order['is_api'] = 1;
+
                 if(isset($in->show_shop)){
                     $order['show_shop'] = $in->show_shop;
                 }
