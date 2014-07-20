@@ -1112,6 +1112,10 @@ class V2 extends REST_Controller {
                     //->where('assignment_date >', time())
                     ->get($this->config->item('incoming_delivery_table') )->result_array();
 
+                for($i = 0; $i < count($orders);$i++){
+                    $orders[$i]['actual_weight'] = (is_null($orders[$i]['actual_weight']))?0:$orders[$i]['actual_weight'];
+                }
+
                 $result = json_encode(array('status'=>'OK:DATASENT','orders'=>$orders,'timestamp'=>now()));
                 print $result;
             }
