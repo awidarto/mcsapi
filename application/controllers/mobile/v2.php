@@ -1053,7 +1053,7 @@ class V2 extends REST_Controller {
                 $rs = $this->db->insert($this->config->item('delivery_details_table'),$item);
             }else{
                 $item = array('pickup_status'=>$k['pickup_status']);
-                $rs = $this->db->where('merchant_trans_id', $k['trx_id'])->update($this->config->item('delivery_details_table'),$item);
+                $rs = $this->db->where('merchant_trans_id', $k['trx_id'])->update($this->config->item('incoming_delivery_table'),$item);
             }
 
 
