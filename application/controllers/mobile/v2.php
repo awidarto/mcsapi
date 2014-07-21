@@ -1017,10 +1017,12 @@ class V2 extends REST_Controller {
 
             $orderitem['cod_cost'] = $k['codsurcharge'];
             $orderitem['total_price'] = $k['unit_price'];
-            $orderitem['pic_address'] = $k['pic_address'];
-            $orderitem['pic_1'] = $k['pic_1'];
-            $orderitem['pic_2'] = $k['pic_2'];
-            $orderitem['pic_3'] = $k['pic_3'];
+
+            $orderitem['pic_address'] = (isset($k['pic_address']))?$k['pic_address']:'';
+            $orderitem['pic_1'] = (isset($k['pic_1']))?$k['pic_1']:'';
+            $orderitem['pic_2'] = (isset($k['pic_2']))?$k['pic_2']:'';
+            $orderitem['pic_3'] = (isset($k['pic_3']))?$k['pic_3']:'';
+
             $orderitem['pickup_dev_id'] = $pickup_device;
             $orderitem['pickup_person'] = $pickup_person;
 
