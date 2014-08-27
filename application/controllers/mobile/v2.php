@@ -1084,20 +1084,24 @@ class V2 extends REST_Controller {
     public function pickup_get(){
         $api_key = $this->get('key');
         $device = $this->get('did');
+        $merchant = $this->get('mid');
 
         if(is_null($api_key) || $api_key == ''){
             $result = json_encode(array('status'=>'ERR:NOKEY','timestamp'=>now()));
             print $result;
         }else{
-
+            /*
             if(is_null($device) || $device == ''){
                 $result = json_encode(array('status'=>'ERR:NODEVID','timestamp'=>now()));
                 print $result;
             }else{
-                $orders = $this->db->where('toscan',1)
-                    ->where('pickup_dev_id',$device)
-                    ->where('pickup_status',$this->config->item('trans_status_tobepickup'))
-                    //->where('assignment_date >', time())
+            */
+                $orders = $this->db
+                    //->where('toscan',1)
+                    //->where('pickup_dev_id',$device)
+                    //->where('pickup_status',$this->config->item('trans_status_tobepickup'))
+                    ->where('merchant_id',$mid)
+                    ->where('assignment_date >', time())
                     ->get($this->config->item('incoming_delivery_table') )->result_array();
 
                 for($i = 0; $i < count($orders);$i++){
@@ -1106,7 +1110,7 @@ class V2 extends REST_Controller {
 
                 $result = json_encode(array('status'=>'OK:DATASENT','orders'=>$orders,'timestamp'=>now()));
                 print $result;
-            }
+            //}
         }
 
 
