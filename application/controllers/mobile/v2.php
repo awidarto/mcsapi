@@ -1085,6 +1085,7 @@ class V2 extends REST_Controller {
         $api_key = $this->get('key');
         $device = $this->get('did');
         $merchant = $this->get('mid');
+        $date = $this->get('date');
 
         if(is_null($api_key) || $api_key == ''){
             $result = json_encode(array('status'=>'ERR:NOKEY','timestamp'=>now()));
@@ -1101,7 +1102,7 @@ class V2 extends REST_Controller {
                     //->where('pickup_dev_id',$device)
                     //->where('pickup_status',$this->config->item('trans_status_tobepickup'))
                     ->where('merchant_id',$mid)
-                    ->where('assignment_date >', time())
+                    ->like('ordertime', date('Y-m-d',time()), 'after' )
                     ->get($this->config->item('incoming_delivery_table') )->result_array();
 
                 for($i = 0; $i < count($orders);$i++){
