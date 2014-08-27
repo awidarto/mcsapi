@@ -1101,7 +1101,7 @@ class V2 extends REST_Controller {
                     //->where('toscan',1)
                     //->where('pickup_dev_id',$device)
                     //->where('pickup_status',$this->config->item('trans_status_tobepickup'))
-                    ->where('merchant_id',$mid)
+                    ->where('merchant_id',$merchant)
                     ->like('ordertime', date('Y-m-d',time()), 'after' )
                     ->get($this->config->item('incoming_delivery_table') )->result_array();
 
