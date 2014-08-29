@@ -1025,6 +1025,7 @@ class V2 extends REST_Controller {
 
             $orderitem['pickup_dev_id'] = $pickup_device;
             $orderitem['pickup_person'] = $pickup_person;
+            $orderitem['pickup_status'] = $this->config->item('trans_status_pickup');
 
             $orderitem['is_pickup'] = 1;
 
