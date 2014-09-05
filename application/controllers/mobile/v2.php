@@ -125,7 +125,7 @@ class V2 extends REST_Controller {
             $this->db->where('merchant_trans_id',trim($trx_id))->update($this->config->item('incoming_delivery_table'), $pu_data);
 
             if($this->db->affected_rows() > 0){
-                $result = json_encode(array('status'=>'OK:STATUSUPDATED','timestamp'=>now(),'delivery_id'=>$delivery_id));
+                $result = json_encode(array('status'=>'OK:STATUSUPDATED','timestamp'=>now());
                 print $result;
             }else{
                 $result = json_encode(array('status'=>'NOK:STATUSUPDATEFAILED','timestamp'=>now()));
