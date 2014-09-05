@@ -120,6 +120,8 @@ class V2 extends REST_Controller {
 
             $pu_data = array( 'pickup_status'=>$pu_stat[$status] );
 
+            $trx_id = base64_decode($trx_id);
+
             $this->db->where('merchant_trans_id',trim($trx_id))->update($this->config->item('incoming_delivery_table'), $pu_data);
 
             if($this->db->affected_rows() > 0){
