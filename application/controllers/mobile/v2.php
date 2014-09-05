@@ -127,11 +127,11 @@ class V2 extends REST_Controller {
             if($this->db->affected_rows() > 0){
                 //$result = json_encode(array('status'=>'OK:STATUSUPDATED','timestamp'=>now());
                 //print $result;
-                $this->response(array('status'=>'OK:STATUSUPDATED','timestamp'=>now()),200);
+                $this->response(array('status'=>'OK:STATUSUPDATED','timestamp'=>now(),'trx'=>$trx_id ),200);
             }else{
                 //$result = json_encode(array('status'=>'NOK:STATUSUPDATEFAILED','timestamp'=>now()));
                 //print $result;
-                $this->response(array('status'=>'OK:STATUSUPDATEFAILED','timestamp'=>now()),200);
+                $this->response(array('status'=>'OK:STATUSUPDATEFAILED','timestamp'=>now(),'trx'=>$trx_id),200);
             }
 
         }
