@@ -100,6 +100,40 @@ class V2 extends REST_Controller {
 
     }
 
+    public function pustatus_get()
+    {
+
+        $args = '';
+
+        $api_key = $this->get('key');
+        $trx_id = $this->get('trx');
+        $status = $this->get('status');
+
+        $pu_stat = $this->config->item('pu_status_code');
+
+        if(is_null($api_key)){
+            $this->response(array('status'=>'ERR:NOKEY','timestamp'=>now()),400);
+        }else if( in_array($status, array_keys($pu_stat)) == false ){
+            $this->response(array('status'=>'ERR:INVALIDSTATUS','timestamp'=>now()),400);
+        }else{
+
+
+            $pu_data = array( 'pickup_status'=>$pu_stat[$status] );
+
+            $this->db->where('merchant_trans_id',trim($trx_id))->update($this->config->item('incoming_delivery_table'), $pu_data);
+
+            if($this->db->affected_rows() > 0){
+                $result = json_encode(array('status'=>'OK:STATUSUPDATED','timestamp'=>now(),'delivery_id'=>$delivery_id));
+                print $result;
+            }else{
+                $result = json_encode(array('status'=>'NOK:STATUSUPDATEFAILED','timestamp'=>now()));
+                print $result;
+            }
+
+        }
+
+
+    }
 
     public function order_post()
     {

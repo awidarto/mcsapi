@@ -164,6 +164,11 @@ $config['actors_title'] = array(
 	'MC'=>'merchant'
 );
 
+$config['pu_status_code'] = array(
+    'pu'=>'sudah diambil',
+    'wp'=>'akan diambil',
+    'cp'=>'batal diambil'
+);
 
 $config['fetch_method'] = array(
 	'GET'=>'GET',
