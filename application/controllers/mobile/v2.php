@@ -286,10 +286,15 @@ class V2 extends REST_Controller {
                     $order['show_merchant'] = $in->show_merchant;
                 }
 
-                $inres = $this->db->insert($this->config->item('incoming_delivery_table'),$order);
-                $sequence = $this->db->insert_id();
 
-                $delivery_id = get_delivery_id($sequence,$app->merchant_id);
+                if(isset($in->delivery_id) && $in->delivery_id != ""){
+                    $delivery_id = $in->delivery_id;
+                    $this->db->where('delivery_id',$delivery_id)->update($this->config->item('incoming_delivery_table'),$order);
+                }else{
+                    $inres = $this->db->insert($this->config->item('incoming_delivery_table'),$order);
+                    $sequence = $this->db->insert_id();
+                    $delivery_id = get_delivery_id($sequence,$app->merchant_id);
+                }
 
                 $nedata['fullname'] = $in->buyer_name;
                 $nedata['merchant_trx_id'] = trim($transaction_id);
