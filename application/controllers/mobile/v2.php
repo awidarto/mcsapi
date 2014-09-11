@@ -108,6 +108,7 @@ class V2 extends REST_Controller {
         $api_key = $this->get('key');
         $trx_id = $this->get('trx');
         $status = $this->get('status');
+        $did = $this->get('did');
 
         $pu_stat = $this->config->item('pu_status_code');
 
