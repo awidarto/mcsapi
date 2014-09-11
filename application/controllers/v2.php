@@ -607,6 +607,7 @@ class V2 extends REST_Controller {
                         }
 
                         $this->db->where('merchant_trans_id',$trx_id)
+                            ->where('status != ','delivered')
                             ->update($this->config->item('assigned_delivery_table'), array('status'=>$status));
                     }
 
@@ -644,6 +645,7 @@ class V2 extends REST_Controller {
                         }
 
                         $this->db->where('delivery_id',$delivery_id)
+                            ->where('status != ','delivered')
                             ->update($this->config->item('assigned_delivery_table'), array('status'=>$status));
                     }
 
