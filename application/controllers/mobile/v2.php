@@ -165,10 +165,10 @@ class V2 extends REST_Controller {
                     $pu_data = array( 'merchant_trans_id'=>$trx_id );
                     $this->db->where('delivery_id',trim($did))->update($this->config->item('incoming_delivery_table'), $pu_data);
                 }else{
-                    $this->response(array('status'=>'ERR:MISSINGPARAMS','timestamp'=>now(),'trx'=>$trx_id, 'did'=>$delivery_id ),200);
+                    $this->response(array('status'=>'ERR:MISSINGPARAMS','timestamp'=>now(),'trx'=>$trx_id, 'did'=>$did ),200);
                 }
             }else{
-                $this->response(array('status'=>'ERR:MISSINGPARAMS','timestamp'=>now(),'trx'=>$trx_id, 'did'=>$delivery_id ),200);
+                $this->response(array('status'=>'ERR:MISSINGPARAMS','timestamp'=>now(),'trx'=>$trx_id, 'did'=>$did ),200);
             }
 
             if($this->db->affected_rows() > 0){
