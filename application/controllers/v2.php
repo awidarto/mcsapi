@@ -620,9 +620,9 @@ class V2 extends REST_Controller {
 
                     if($trxstatus->num_rows() > 0){
                         $trxstatus = $trxstatus->row_array();
-                        $trxstatus = array('trx'=>array($trx_id=>$trxstatus['status']));
+                        $trxstatus = array($trx_id=>$trxstatus['status']);
                     }else{
-                        $trxstatus = array('trx'=>array($trx_id=>null));
+                        $trxstatus = array($trx_id=>null);
                     }
 
                 }
@@ -657,14 +657,14 @@ class V2 extends REST_Controller {
 
                     if($deliverystatus->num_rows() > 0){
                         $deliverystatus = $deliverystatus->row_array();
-                        $deliverystatus = array('did'=>array($delivery_id=>$deliverystatus['status']));
+                        $deliverystatus = array($delivery_id=>$deliverystatus['status']);
                     }else{
-                        $deliverystatus = array('did'=>array($delivery_id=>null));
+                        $deliverystatus = array($delivery_id=>null);
                     }
 
                 }
 
-                $result = json_encode(array('status'=>'OK:STATUSRETRIEVED','timestamp'=>now(),$trxstatus,$deliverystatus));
+                $result = json_encode(array('status'=>'OK:STATUSRETRIEVED','timestamp'=>now(),'trx'=>$trxstatus,'did'=>$deliverystatus));
 
                 print $result;
 

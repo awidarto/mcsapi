@@ -118,12 +118,15 @@ class V2 extends REST_Controller {
             $this->response(array('status'=>'ERR:INVALIDSTATUS','timestamp'=>now()),400);
         }else{
 
-
             $pu_data = array( 'pickup_status'=>$pu_stat[$status] );
 
-            $trx_id = base64_decode($trx_id);
-
-            $this->db->where('merchant_trans_id',trim($trx_id))->update($this->config->item('incoming_delivery_table'), $pu_data);
+            if(isset($did) && is_null($did) == false && $did != ''){
+                $did = base64_decode($did);
+                $this->db->where('delivery_id',trim($did))->update($this->config->item('incoming_delivery_table'), $pu_data);
+            }else if(isset($trx_id) && is_null($trx_id) == false && $trx_id != ''){
+                $trx_id = base64_decode($trx_id);
+                $this->db->where('merchant_trans_id',trim($trx_id))->update($this->config->item('incoming_delivery_table'), $pu_data);
+            }
 
             if($this->db->affected_rows() > 0){
                 //$result = json_encode(array('status'=>'OK:STATUSUPDATED','timestamp'=>now());
