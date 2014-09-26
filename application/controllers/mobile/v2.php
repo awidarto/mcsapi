@@ -152,8 +152,6 @@ class V2 extends REST_Controller {
         $trx_id = $this->get('trx');
         $did = $this->get('did');
 
-        $pu_stat = $this->config->item('pu_status_code');
-
         if(is_null($api_key)){
             $this->response(array('status'=>'ERR:NOKEY','timestamp'=>now()),400);
         }else{
