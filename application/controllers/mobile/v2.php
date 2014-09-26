@@ -156,10 +156,7 @@ class V2 extends REST_Controller {
 
         if(is_null($api_key)){
             $this->response(array('status'=>'ERR:NOKEY','timestamp'=>now()),400);
-        }else if( in_array($status, array_keys($pu_stat)) == false ){
-            $this->response(array('status'=>'ERR:INVALIDSTATUS','timestamp'=>now()),400);
         }else{
-
 
             if(isset($did) && is_null($did) == false && $did != ''){
                 $did = base64_decode($did);
