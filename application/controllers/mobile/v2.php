@@ -143,6 +143,52 @@ class V2 extends REST_Controller {
 
     }
 
+    public function trxchange_get()
+    {
+
+        $args = '';
+
+        $api_key = $this->get('key');
+        $trx_id = $this->get('trx');
+        $did = $this->get('did');
+
+        $pu_stat = $this->config->item('pu_status_code');
+
+        if(is_null($api_key)){
+            $this->response(array('status'=>'ERR:NOKEY','timestamp'=>now()),400);
+        }else if( in_array($status, array_keys($pu_stat)) == false ){
+            $this->response(array('status'=>'ERR:INVALIDSTATUS','timestamp'=>now()),400);
+        }else{
+
+
+            if(isset($did) && is_null($did) == false && $did != ''){
+                $did = base64_decode($did);
+                if(isset($trx_id) && is_null($trx_id) == false && $trx_id != ''){
+                    $trx_id = base64_decode($trx_id);
+                    $pu_data = array( 'merchant_trans_id'=>$trx_id );
+                    $this->db->where('delivery_id',trim($did))->update($this->config->item('incoming_delivery_table'), $pu_data);
+                }else{
+                    $this->response(array('status'=>'ERR:MISSINGPARAMS','timestamp'=>now(),'trx'=>$trx_id, 'did'=>$delivery_id ),200);
+                }
+            }else{
+                $this->response(array('status'=>'ERR:MISSINGPARAMS','timestamp'=>now(),'trx'=>$trx_id, 'did'=>$delivery_id ),200);
+            }
+
+            if($this->db->affected_rows() > 0){
+                //$result = json_encode(array('status'=>'OK:STATUSUPDATED','timestamp'=>now());
+                //print $result;
+                $this->response(array('status'=>'OK:TRXUPDATED','timestamp'=>now(),'trx'=>$trx_id ),200);
+            }else{
+                //$result = json_encode(array('status'=>'NOK:TRXUPDATEFAILED','timestamp'=>now()));
+                //print $result;
+                $this->response(array('status'=>'OK:TRXUPDATEFAILED','timestamp'=>now(),'trx'=>$trx_id),200);
+            }
+
+        }
+
+
+    }
+
     public function order_post()
     {
         $args = '';
