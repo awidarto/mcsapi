@@ -1276,6 +1276,43 @@ class V2 extends REST_Controller {
         }
     }
 
+    public function sign_post(){
+
+        $api_key = $this->get('key');
+
+        if(is_null($api_key) || $api_key == ''){
+            $result = json_encode(array('status'=>'ERR:NOKEY','timestamp'=>now()));
+            print $result;
+        }else{
+            $delivery_id = $this->input->post('delivery_id');
+
+            $imagefilename = $this->post('imagefilename');
+
+            $target_path = $this->config->item('pusign_path').$imagefilename;
+
+            if(move_uploaded_file($_FILES['receiverpic']['tmp_name'], $target_path)) {
+                /*
+                $config['image_library'] = 'gd2';
+                $config['source_image'] = $target_path;
+                $config['new_image'] = $this->config->item('thumbnail_path').'th_'.$delivery_id.'.jpg';
+                $config['create_thumb'] = false;
+                $config['maintain_ratio'] = TRUE;
+                $config['width']     = 100;
+                $config['height']   = 75;
+
+                $this->load->library('image_lib', $config);
+
+                $this->image_lib->resize();
+                */
+                $result = json_encode(array('status'=>'OK:PICUPLOAD','timestamp'=>now()));
+                print $result;
+            } else{
+                $result = json_encode(array('status'=>'ERR:UPLOADFAILED','timestamp'=>now()));
+                print $result;
+            }
+        }
+    }
+
     //private supporting functions
 
     private function get_key_info($key){
