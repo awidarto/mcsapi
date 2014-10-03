@@ -1290,7 +1290,7 @@ class V2 extends REST_Controller {
 
             $target_path = $this->config->item('pusign_path').$imagefilename;
 
-            if(move_uploaded_file($_FILES['receiverpic']['tmp_name'], $target_path)) {
+            if(move_uploaded_file($_FILES['imagefile']['tmp_name'], $target_path)) {
                 /*
                 $config['image_library'] = 'gd2';
                 $config['source_image'] = $target_path;
