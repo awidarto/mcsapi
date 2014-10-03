@@ -1298,7 +1298,7 @@ class V2 extends REST_Controller {
             $sign['application_id'] = $s[1];
             $sign['signature_date'] = $s[2];
             $sign['signature_filename'] = $imagefilename;
-            $sign['photo_timestamp'] = $imagetimestamp;
+            $sign['photo_timestamp'] = strtotime($imagetimestamp);
 
             $this->db->insert('pickup_signatures',$sign);
 
