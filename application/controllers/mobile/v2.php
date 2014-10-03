@@ -1287,8 +1287,21 @@ class V2 extends REST_Controller {
             $delivery_id = $this->input->post('delivery_id');
 
             $imagefilename = $this->post('imagefilename');
+            $imagetimestamp = $this->post('imagetimestamp');
 
             $target_path = $this->config->item('pusign_path').$imagefilename;
+
+            $s = explode('_', str_replace('.jpg','', $imagefilename));
+
+            $sign = array();
+            $sign['merchant_id'] = $s[0];
+            $sign['application_id'] = $s[1];
+            $sign['signature_date'] = $s[2];
+            $sign['signature_filename'] = $imagefilename;
+            $sign['photo_timestamp'] = $imagetimestamp;
+
+            $this->db->insert('pickup_signatures',$sign);
+
 
             if(move_uploaded_file($_FILES['imagefile']['tmp_name'], $target_path)) {
                 /*
