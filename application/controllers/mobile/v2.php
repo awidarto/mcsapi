@@ -1121,31 +1121,77 @@ class V2 extends REST_Controller {
 
             //print_r($orderitem);
 
-            if($this->record_exists($this->config->item('incoming_delivery_table'), 'merchant_trans_id' , $k['trx_id']) == false){
+            $use_did = false;
+
+            if( isset($k['delivery_id']) &&  $k['delivery_id'] != '' && !is_null($k['delivery_id'])  )){
+                /*
+                if($this->record_exists($this->config->item('incoming_delivery_table'), 'delivery_id' , $k['delivery_id']) == false){
 
 
-                $inres = $this->db->insert($this->config->item('incoming_delivery_table'),$orderitem);
-                $sequence = $this->db->insert_id();
-                $delivery_id = get_delivery_id($sequence,$app->merchant_id);
+                    $inres = $this->db->insert($this->config->item('incoming_delivery_table'),$orderitem);
+                    $sequence = $this->db->insert_id();
+                    $delivery_id = $k['delivery_id'];
 
-                $this->db->where('id',$sequence)->update($this->config->item('incoming_delivery_table'),array('delivery_id'=>$delivery_id));
+                    $this->db->where('id',$sequence)->update($this->config->item('incoming_delivery_table'),array('delivery_id'=>$delivery_id));
 
-                $item = array();
+                    $item = array();
 
-                $item['ordertime'] = $orderitem['ordertime'];
-                $item['delivery_id'] = $delivery_id;
-                $item['unit_sequence'] = 1;
-                $item['unit_description'] = '[PU] '.$k['recipient_name'];
-                $item['unit_price'] = $k['unit_price'];
-                $item['unit_quantity'] = 1;
+                    $item['ordertime'] = $orderitem['ordertime'];
+                    $item['delivery_id'] = $delivery_id;
+                    $item['unit_sequence'] = 1;
+                    $item['unit_description'] = '[PU] '.$k['recipient_name'];
+                    $item['unit_price'] = $k['unit_price'];
+                    $item['unit_quantity'] = 1;
 
-                $item['unit_total'] = $item['unit_quantity'] * $k['unit_price'];
+                    $item['unit_total'] = $item['unit_quantity'] * $k['unit_price'];
 
-                $rs = $this->db->insert($this->config->item('delivery_details_table'),$item);
-            }else{
-                $item = array('pickup_status'=>$k['pickup_status']);
-                $rs = $this->db->where('merchant_trans_id', $k['trx_id'])->update($this->config->item('incoming_delivery_table'),$item);
+                    $rs = $this->db->insert($this->config->item('delivery_details_table'),$item);
+
+                    $use_did = true;
+
+                }else{
+                */
+                    $item = array('pickup_status'=>$k['pickup_status']);
+                    $rs = $this->db->where('delivery_id', $k['delivery_id'])->update($this->config->item('incoming_delivery_table'),$item);
+
+                    $use_did = true;
+                /*
+                }
+                */
+
             }
+
+            if($use_did == false){
+
+                if($this->record_exists($this->config->item('incoming_delivery_table'), 'merchant_trans_id' , $k['trx_id']) == false){
+
+
+                    $inres = $this->db->insert($this->config->item('incoming_delivery_table'),$orderitem);
+                    $sequence = $this->db->insert_id();
+                    $delivery_id = get_delivery_id($sequence,$app->merchant_id);
+
+                    $this->db->where('id',$sequence)->update($this->config->item('incoming_delivery_table'),array('delivery_id'=>$delivery_id));
+
+                    $item = array();
+
+                    $item['ordertime'] = $orderitem['ordertime'];
+                    $item['delivery_id'] = $delivery_id;
+                    $item['unit_sequence'] = 1;
+                    $item['unit_description'] = '[PU] '.$k['recipient_name'];
+                    $item['unit_price'] = $k['unit_price'];
+                    $item['unit_quantity'] = 1;
+
+                    $item['unit_total'] = $item['unit_quantity'] * $k['unit_price'];
+
+                    $rs = $this->db->insert($this->config->item('delivery_details_table'),$item);
+                }else{
+                    $item = array('pickup_status'=>$k['pickup_status']);
+                    $rs = $this->db->where('merchant_trans_id', $k['trx_id'])->update($this->config->item('incoming_delivery_table'),$item);
+                }
+
+            }
+
+
 
 
             file_put_contents( $pu_dir.$k['trx_id'].'.json' , json_encode($k));
