@@ -1123,7 +1123,7 @@ class V2 extends REST_Controller {
 
             $use_did = false;
 
-            if( isset($k['delivery_id']) &&  $k['delivery_id'] != '' && !is_null($k['delivery_id'])  )){
+            if( isset($k['delivery_id']) &&  $k['delivery_id'] != '' ){
 
                 $item = array('pickup_status'=>$k['pickup_status']);
                 $rs = $this->db->where('delivery_id', $k['delivery_id'])->update($this->config->item('incoming_delivery_table'),$item);
