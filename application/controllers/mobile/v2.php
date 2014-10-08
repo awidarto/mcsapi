@@ -1213,6 +1213,9 @@ class V2 extends REST_Controller {
                     $orders[$i]['total_price'] = (is_null($orders[$i]['total_price']))?0:(double)$orders[$i]['total_price'];
                     $orders[$i]['cod_cost'] = (is_null($orders[$i]['cod_cost']))?0:(double)$orders[$i]['cod_cost'];
                     $orders[$i]['delivery_cost'] = (is_null($orders[$i]['delivery_cost']))?0:(double)$orders[$i]['delivery_cost'];
+                    $orders[$i]['chargeable_amount'] = (is_null($orders[$i]['chargeable_amount']))?0:(double)$orders[$i]['chargeable_amount'];
+                    $orders[$i]['total_tax'] = (is_null($orders[$i]['total_tax']))?0:(double)$orders[$i]['total_tax'];
+                    $orders[$i]['total_discount'] = (is_null($orders[$i]['total_discount']))?0:(double)$orders[$i]['total_discount'];
                 }
 
                 $result = json_encode(array('status'=>'OK:DATASENT','orders'=>$orders,'timestamp'=>now()));
