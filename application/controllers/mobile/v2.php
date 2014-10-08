@@ -1211,6 +1211,8 @@ class V2 extends REST_Controller {
                 for($i = 0; $i < count($orders);$i++){
                     $orders[$i]['actual_weight'] = (is_null($orders[$i]['actual_weight']))?0:$orders[$i]['actual_weight'];
                     $orders[$i]['total_price'] = (is_null($orders[$i]['total_price']))?0:(double)$orders[$i]['total_price'];
+                    $orders[$i]['cod_cost'] = (is_null($orders[$i]['cod_cost']))?0:(double)$orders[$i]['cod_cost'];
+                    $orders[$i]['delivery_cost'] = (is_null($orders[$i]['delivery_cost']))?0:(double)$orders[$i]['delivery_cost'];
                 }
 
                 $result = json_encode(array('status'=>'OK:DATASENT','orders'=>$orders,'timestamp'=>now()));
