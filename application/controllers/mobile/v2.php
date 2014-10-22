@@ -121,7 +121,7 @@ class V2 extends REST_Controller {
             $pu_data = array( 'pickup_status'=>$pu_stat[$status] );
 
             if(isset($did) && is_null($did) == false && $did != ''){
-                $did = base64_decode($did);
+                //$did = base64_decode($did);
                 $this->db->where('delivery_id',trim($did))->update($this->config->item('incoming_delivery_table'), $pu_data);
             }else if(isset($trx_id) && is_null($trx_id) == false && $trx_id != ''){
                 $trx_id = base64_decode($trx_id);
@@ -1120,6 +1120,7 @@ class V2 extends REST_Controller {
 
             $sorders[] = $k['trx_id'];
 
+
             //print_r($orderitem);
 
             $use_did = false;
@@ -1322,6 +1323,58 @@ class V2 extends REST_Controller {
             $sign['photo_timestamp'] = $imagetimestamp;
 
             $this->db->insert('pickup_signatures',$sign);
+
+
+            if(move_uploaded_file($_FILES['imagefile']['tmp_name'], $target_path)) {
+                /*
+                $config['image_library'] = 'gd2';
+                $config['source_image'] = $target_path;
+                $config['new_image'] = $this->config->item('thumbnail_path').'th_'.$delivery_id.'.jpg';
+                $config['create_thumb'] = false;
+                $config['maintain_ratio'] = TRUE;
+                $config['width']     = 100;
+                $config['height']   = 75;
+
+                $this->load->library('image_lib', $config);
+
+                $this->image_lib->resize();
+                */
+                $result = json_encode(array('status'=>'OK:PICUPLOAD','timestamp'=>now()));
+                print $result;
+            } else{
+                $result = json_encode(array('status'=>'ERR:UPLOADFAILED','timestamp'=>now()));
+                print $result;
+            }
+        }
+    }
+
+    public function pickupphoto_post(){
+
+        $api_key = $this->get('key');
+
+        if(is_null($api_key) || $api_key == ''){
+            $result = json_encode(array('status'=>'ERR:NOKEY','timestamp'=>now()));
+            print $result;
+        }else{
+            $delivery_id = $this->input->post('delivery_id');
+
+            $imagefilename = $this->post('imagefilename');
+            $imagetimestamp = $this->post('imagetimestamp');
+
+            $pu_pic_dir = FCPATH.'public/pickup/';
+
+            $target_path = $pu_pic_dir.$imagefilename;
+
+            $s = explode('_', str_replace('.jpg','', $imagefilename));
+
+            $sign = array();
+            $sign['merchant_id'] = $s[0];
+            $sign['application_id'] = $s[1];
+            $sign['signature_date'] = $s[2];
+            $sign['signature_filename'] = $imagefilename;
+            $sign['photo_timestamp'] = $imagetimestamp;
+
+            $this->db->insert('pickup_photos',$sign);
 
 
             if(move_uploaded_file($_FILES['imagefile']['tmp_name'], $target_path)) {
