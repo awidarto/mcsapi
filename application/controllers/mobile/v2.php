@@ -142,7 +142,7 @@ class V2 extends REST_Controller {
             }
 
         }
-
+        header('Content-Type: application/json');
         print $result;
     }
 
@@ -1185,8 +1185,8 @@ class V2 extends REST_Controller {
 
 
         $result = json_encode(array('status'=>'OK:DATASENT','orders'=>$sorders,'timestamp'=>now()));
+        header('Content-Type: application/json');
         print $result;
-
     }
 
     public function pickup_get(){
