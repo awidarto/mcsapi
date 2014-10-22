@@ -372,7 +372,7 @@ class V2 extends REST_Controller {
                     foreach($in->trx_detail as $it){
                         $item['ordertime'] = $order['ordertime'];
                         $item['delivery_id'] = $delivery_id;
-                        $item['unit_sequence'] = $seq++;
+                        $item['unit_sequence'] = $seq;
                         $item['unit_description'] = $it->unit_description;
                         $item['unit_price'] = $it->unit_price;
                         $item['unit_quantity'] = $it->unit_quantity;
@@ -393,6 +393,7 @@ class V2 extends REST_Controller {
                         $gt += (int)$u_total;
                         $d += (int)$u_discount;
 
+                        $seq++;
                     }
 
                     $total = (isset($in->total_price) && $in->total_price > 0)?$in->total_price:0;
@@ -1168,7 +1169,7 @@ class V2 extends REST_Controller {
                 file_put_contents($pu_pic_dir.$k['pic_address'], base64_decode( $k['pic_address_body']) );
             }
             if(isset( $k['pic_1_body'] )){
-                file_put_contents($pu_pic_dir.$k['pic_address'], base64_decode( $k['pic_1_body']) );
+                file_put_contents($pu_pic_dir.$k['pic_1'], base64_decode( $k['pic_1_body']) );
             }
             if(isset( $k['pic_2_body'] )){
                 file_put_contents($pu_pic_dir.$k['pic_2'], base64_decode( $k['pic_2_body']) );
