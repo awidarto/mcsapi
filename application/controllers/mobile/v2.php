@@ -113,9 +113,13 @@ class V2 extends REST_Controller {
         $pu_stat = $this->config->item('pu_status_code');
 
         if(is_null($api_key)){
-            $this->response(array('status'=>'ERR:NOKEY','timestamp'=>now()),400);
+            //$this->response(array('status'=>'ERR:NOKEY','timestamp'=>now()),400);
+                $result = json_encode(array('status'=>'ERR:NOKEY','timestamp'=>now()));
+
         }else if( in_array($status, array_keys($pu_stat)) == false ){
-            $this->response(array('status'=>'ERR:INVALIDSTATUS','timestamp'=>now()),400);
+            //$this->response(array('status'=>'ERR:INVALIDSTATUS','timestamp'=>now()),400);
+                $result = json_encode(array('status'=>'ERR:INVALIDSTATUS','timestamp'=>now()));
+
         }else{
 
             $pu_data = array( 'pickup_status'=>$pu_stat[$status] );
@@ -129,18 +133,17 @@ class V2 extends REST_Controller {
             }
 
             if($this->db->affected_rows() > 0){
-                //$result = json_encode(array('status'=>'OK:STATUSUPDATED','timestamp'=>now());
-                //print $result;
-                $this->response(array('status'=>'OK:STATUSUPDATED','timestamp'=>now(),'trx'=>$trx_id ),200);
+                //$this->response(array('status'=>'OK:STATUSUPDATED','timestamp'=>now(),'trx'=>$trx_id ),200);
+                $result = json_encode(array('status'=>'OK:STATUSUPDATED','timestamp'=>now(),'trx'=>$trx_id));
+
             }else{
-                //$result = json_encode(array('status'=>'NOK:STATUSUPDATEFAILED','timestamp'=>now()));
-                //print $result;
-                $this->response(array('status'=>'OK:STATUSUPDATEFAILED','timestamp'=>now(),'trx'=>$trx_id),200);
+                //$this->response(array('status'=>'OK:STATUSUPDATEFAILED','timestamp'=>now(),'trx'=>$trx_id),200);
+                $result = json_encode(array('status'=>'OK:STATUSUPDATEFAILED','timestamp'=>now(),'trx'=>$trx_id));
             }
 
         }
 
-
+        print $result;
     }
 
     public function trxchange_get()
