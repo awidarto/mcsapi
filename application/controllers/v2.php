@@ -577,11 +577,11 @@ class V2 extends REST_Controller {
         $chg = $this->get('chg'); //cancel & confirm
 
         $args = array(
-            $api_key => $this->get('key'),
-            $trx_id => $this->get('trx'),
-            $delivery_id => $this->get('did'),
-            $encoding => $this->get('enc'), // plain or base64
-            $chg => $this->get('chg') //cancel & confirm
+            'api_key' => $this->get('key'),
+            'trx_id' => $this->get('trx'),
+            'delivery_id' => $this->get('did'),
+            'encoding' => $this->get('enc'), // plain or base64
+            'chg' => $this->get('chg') //cancel & confirm
         );
 
         $encoding = (!isset($encoding) || $encoding == '')? 'plain':$encoding;
