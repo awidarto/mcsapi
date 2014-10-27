@@ -1218,7 +1218,7 @@ class V2 extends REST_Controller {
                     ->group_end()
                     ->get($this->config->item('incoming_delivery_table') )->result_array();
 
-                    print $this->db->last_query();
+                    //print $this->db->last_query();
 
                 for($i = 0; $i < count($orders);$i++){
                     $orders[$i]['actual_weight'] = (is_null($orders[$i]['actual_weight']))?0:$orders[$i]['actual_weight'];
