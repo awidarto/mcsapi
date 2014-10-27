@@ -1210,7 +1210,7 @@ class V2 extends REST_Controller {
                     //->where('pickup_dev_id',$device)
                     //->where('pickup_status',$this->config->item('trans_status_tobepickup'))
                     ->where('merchant_id',$merchant)
-                    ->like('ordertime', date('Y-m-d',time()), 'after' )
+                    ->like('ordertime', $date, 'after' )
                     ->and_()
                     ->group_start()
                     ->where('status != ',$this->config->item('trans_status_canceled'))
