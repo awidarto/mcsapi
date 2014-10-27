@@ -42,3 +42,5 @@ WHERE  `pickup_tariff`.`seq` = 3;
 
 Jun 12 2014 add pickup status
 ALTER TABLE `delivery_order_active`  ADD `pickup_status` VARCHAR(25) NULL DEFAULT 'akan diambil' AFTER `toscan`;
+
+ALTER TABLE  `delivery_order_active` ADD  `pickuptime` DATETIME NOT NULL AFTER  `ordertime`

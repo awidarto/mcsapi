@@ -149,6 +149,7 @@ class V2 extends REST_Controller {
 
                 $order['created'] = date('Y-m-d H:i:s',time());
                 $order['ordertime'] = date('Y-m-d H:i:s',time());
+                $order['pickuptime'] = date('Y-m-d H:i:s',time());
                 $order['application_id'] = $app->id;
                 $order['application_key'] = $app->key;
                 $order['buyer_id'] = $buyer_id;

@@ -1213,7 +1213,7 @@ class V2 extends REST_Controller {
                     ->and_()
                     ->group_start()
                     ->like('ordertime', $date, 'after' )
-                    ->or_where('toscan',1)
+                    ->or_like('pickuptime', $date, 'after' )
                     ->group_end()
                     ->and_()
                     ->group_start()
