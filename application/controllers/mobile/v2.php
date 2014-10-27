@@ -1211,7 +1211,14 @@ class V2 extends REST_Controller {
                     //->where('pickup_status',$this->config->item('trans_status_tobepickup'))
                     ->where('merchant_id',$merchant)
                     ->like('ordertime', date('Y-m-d',time()), 'after' )
+                    ->and_()
+                    ->group_start()
+                    ->where('status != ',$this->config->item('trans_status_canceled'))
+                    ->where('pickup_status != ',$this->config->item('trans_status_canceled'))
+                    ->group_end()
                     ->get($this->config->item('incoming_delivery_table') )->result_array();
+
+                    print $this->db->last_query();
 
                 for($i = 0; $i < count($orders);$i++){
                     $orders[$i]['actual_weight'] = (is_null($orders[$i]['actual_weight']))?0:$orders[$i]['actual_weight'];
