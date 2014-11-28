@@ -1252,6 +1252,7 @@ class V2 extends REST_Controller {
                     $orders[$i]['chargeable_amount'] = (is_null($orders[$i]['chargeable_amount']))?0:(double)$orders[$i]['chargeable_amount'];
                     $orders[$i]['total_tax'] = (is_null($orders[$i]['total_tax']))?0:(double)$orders[$i]['total_tax'];
                     $orders[$i]['total_discount'] = (is_null($orders[$i]['total_discount']))?0:(double)$orders[$i]['total_discount'];
+                    $orders[$i]['order_src'] = 'dashboard';
                 }
 
 
