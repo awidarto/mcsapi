@@ -1117,12 +1117,16 @@ class V2 extends REST_Controller {
 
             $orderitem['pickup_dev_id'] = $pickup_device;
             $orderitem['pickup_person'] = $pickup_person;
-            $orderitem['pickup_status'] = $this->config->item('trans_status_pickup');
+            if( isset($k['pickup_status']) &&  $k['pickup_status'] != '' ){
+                $orderitem['pickup_status'] = $k['pickup_status'];
+            }else{
+                $orderitem['pickup_status'] = $this->config->item('trans_status_pickup');
+            }
+
 
             $orderitem['is_pickup'] = 1;
 
             $sorders[] = $k['trx_id'];
-
 
             //print_r($orderitem);
 
