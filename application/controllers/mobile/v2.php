@@ -1066,6 +1066,8 @@ class V2 extends REST_Controller {
 
         $in = file_get_contents('php://input');
 
+        $sinput = $in;
+
         $filename = random_string('alnum', 8);
 
         $pu_dir = FCPATH.'json/pickup/';
@@ -1191,6 +1193,15 @@ class V2 extends REST_Controller {
         $result = json_encode(array('status'=>'OK:DATASENT','orders'=>$sorders,'timestamp'=>now()));
         header('Content-Type: application/json');
         print $result;
+
+        try{
+
+            $this->log_access($api_key, __METHOD__ ,$sinput);
+
+        }catch(Exception $e){
+
+        }
+
     }
 
     public function pickup_get(){
@@ -1243,7 +1254,18 @@ class V2 extends REST_Controller {
                     $orders[$i]['total_discount'] = (is_null($orders[$i]['total_discount']))?0:(double)$orders[$i]['total_discount'];
                 }
 
+
+
                 $result = json_encode(array('status'=>'OK:DATASENT','orders'=>$orders,'timestamp'=>now()));
+
+                try{
+
+                    $this->log_access($api_key, __METHOD__ ,$result);
+
+                }catch(Exception $e){
+
+                }
+
                 print $result;
             //}
         }
