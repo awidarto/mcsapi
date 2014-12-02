@@ -542,6 +542,9 @@ class V2 extends REST_Controller {
         $this->response(array('message'=>'Not Implemented'),400);
     }
 
+
+
+
     /* Merchant end point */
 
     public function merchant_get()
@@ -1271,7 +1274,6 @@ class V2 extends REST_Controller {
             //}
         }
 
-
     }
 
     public function uploadpic_post(){
@@ -1445,6 +1447,64 @@ class V2 extends REST_Controller {
             }
         }
     }
+
+    /* Warehouse merchants */
+    public function jwmerchant_get()
+    {
+        $api_key = $this->get('key');
+        $group_id = user_group_id('merchant');
+        $last = $this->get('last');
+
+        //print $last;
+
+        if($last == 0 || $last == '' || is_null($last)){
+            $last_created = date('Y-m-d H:i:s',0);
+            $last_update = now();
+        }else{
+            $last_created = date('Y-m-d H:i:s',$last);
+            $last_update = $last;
+        }
+
+
+        //print $last_created;
+
+        if(is_null($api_key) || !isset($api_key) || $api_key == ''){
+            $result = json_encode(array('status'=>'ERR:NOKEY','timestamp'=>now()));
+            $this->response(array('status'=>'ERR:NOKEY','timestamp'=>now()),400);
+        }else{
+
+                $merchants = $this->db
+                    ->select(   'id,
+                                street,
+                                district,
+                                province,
+                                city,
+                                country,
+                                zip,
+                                phone,
+                                mobile,
+                                mobile1,
+                                mobile2,
+                                merchantname,
+                                mc_email as mcEmail,
+                                mc_street as mcStreet,
+                                mc_district as mcDistrict,
+                                mc_city as mcCity,
+                                mc_province as mcProvince,
+                                mc_country as mcCountry,
+                                mc_zip as mcZip,
+                                mc_phone as mcPhone,
+                                mc_mobile as mcMobile')
+                    ->from($this->config->item('jayon_members_table'))
+                    ->where('group_id',$group_id)
+                    ->order_by('created','desc')
+                    ->get()
+                    ->result_array();
+
+            $this->response($merchants,200);
+        }
+    }
+
 
     //private supporting functions
 
