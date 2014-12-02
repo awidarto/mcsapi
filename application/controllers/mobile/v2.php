@@ -1474,7 +1474,7 @@ class V2 extends REST_Controller {
         }else{
 
                 $merchants = $this->db
-                    ->select(   'id,
+                    ->select(   'id as extId,
                                 street,
                                 district,
                                 province,
