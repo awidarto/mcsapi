@@ -1533,7 +1533,7 @@ class V2 extends REST_Controller {
                         ->or_()
                         ->group_start()
                             ->where('status = ',$this->config->item('trans_status_confirmed'))
-                            ->where('pickup_status = ',$this->config->item('trans_status_tobepickup'))
+                            ->where('pickup_status = ',$this->config->item('trans_status_pickup'))
                         ->group_end()
                     ->group_end()
                     ->and_()
@@ -1544,7 +1544,7 @@ class V2 extends REST_Controller {
                     ->get($this->config->item('incoming_delivery_table') )->result_array();
 
                     //print $this->db->last_query();
-
+                /*
                 for($i = 0; $i < count($orders);$i++){
                     $orders[$i]['actualWeight'] = (is_null($orders[$i]['actualWeight']))?0:$orders[$i]['actualWeight'];
                     $orders[$i]['totalPrice'] = (is_null($orders[$i]['totalPrice']))?0:(double)$orders[$i]['totalPrice'];
@@ -1555,6 +1555,7 @@ class V2 extends REST_Controller {
                     $orders[$i]['totalDiscount'] = (is_null($orders[$i]['totalDiscount']))?0:(double)$orders[$i]['totalDiscount'];
                     $orders[$i]['orderSrc'] = 'dashboard';
                 }
+                */
 
 
 
