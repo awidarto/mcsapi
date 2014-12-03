@@ -1505,6 +1505,77 @@ class V2 extends REST_Controller {
         }
     }
 
+    public function jwpickup_get(){
+        $api_key = $this->get('key');
+        $device = $this->get('did');
+        $merchant = $this->get('mid');
+        $date = $this->get('date');
+
+        if(is_null($api_key) || $api_key == ''){
+            $result = json_encode(array('status'=>'ERR:NOKEY','timestamp'=>now()));
+            print $result;
+        }else{
+            /*
+            if(is_null($device) || $device == ''){
+                $result = json_encode(array('status'=>'ERR:NODEVID','timestamp'=>now()));
+                print $result;
+            }else{
+            */
+                $orders = $this->db
+                    //->where('toscan',1)
+                    //->where('pickup_dev_id',$device)
+                    //->where('pickup_status',$this->config->item('trans_status_tobepickup'))
+                    ->where('merchant_id',$merchant)
+                    ->and_()
+                    ->group_start()
+                            ->like('ordertime', $date, 'after' )
+                            ->or_like('pickuptime', $date, 'after' )
+                        ->or_()
+                        ->group_start()
+                            ->where('status = ',$this->config->item('trans_status_confirmed'))
+                            ->where('pickup_status = ',$this->config->item('trans_status_tobepickup'))
+                        ->group_end()
+                    ->group_end()
+                    ->and_()
+                        ->group_start()
+                            ->where('status != ',$this->config->item('trans_status_canceled'))
+                            ->where('pickup_status != ',$this->config->item('trans_status_canceled'))
+                        ->group_end()
+                    ->get($this->config->item('incoming_delivery_table') )->result_array();
+
+                    //print $this->db->last_query();
+
+                for($i = 0; $i < count($orders);$i++){
+                    $orders[$i]['actualWeight'] = (is_null($orders[$i]['actualWeight']))?0:$orders[$i]['actualWeight'];
+                    $orders[$i]['totalPrice'] = (is_null($orders[$i]['totalPrice']))?0:(double)$orders[$i]['totalPrice'];
+                    $orders[$i]['codCost'] = (is_null($orders[$i]['codCost']))?0:(double)$orders[$i]['codCost'];
+                    $orders[$i]['deliveryCost'] = (is_null($orders[$i]['deliveryCost']))?0:(double)$orders[$i]['deliveryCost'];
+                    $orders[$i]['chargeableAmount'] = (is_null($orders[$i]['chargeableAmount']))?0:(double)$orders[$i]['chargeableAmount'];
+                    $orders[$i]['totalTax'] = (is_null($orders[$i]['totalTax']))?0:(double)$orders[$i]['totalTax'];
+                    $orders[$i]['totalDiscount'] = (is_null($orders[$i]['totalDiscount']))?0:(double)$orders[$i]['totalDiscount'];
+                    $orders[$i]['orderSrc'] = 'dashboard';
+                }
+
+
+
+                //$result = json_encode(array('status'=>'OK:DATASENT','orders'=>$orders,'timestamp'=>now()));
+
+                try{
+
+                    $this->log_access($api_key, __METHOD__ ,$result);
+
+                }catch(Exception $e){
+
+                }
+
+                $this->response($orders,200);
+
+                //print $result;
+            //}
+        }
+
+    }
+
 
     //private supporting functions
 
