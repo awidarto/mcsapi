@@ -1558,7 +1558,7 @@ class V2 extends REST_Controller {
 
 
 
-                //$result = json_encode(array('status'=>'OK:DATASENT','orders'=>$orders,'timestamp'=>now()));
+                $result = json_encode(array('status'=>'OK:DATASENT','orders'=>$orders,'timestamp'=>now()));
 
                 try{
 
