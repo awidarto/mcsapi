@@ -1548,7 +1548,7 @@ class V2 extends REST_Controller {
                             actual_weight as actualWeight,
                             delivery_type as deliveryType,
                             currency,
-                            total_price,
+                            total_price as totalPrice,
                             fixed_discount as fixedDiscount,
                             total_discount as totalDiscount,
                             total_tax as totalTax,
