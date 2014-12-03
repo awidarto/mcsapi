@@ -1522,6 +1522,97 @@ class V2 extends REST_Controller {
             }else{
             */
                 $orders = $this->db
+                    ->select(
+                            'id as extId,
+                            created,
+                            ordertime,
+                            pickuptime,
+                            buyerdeliverytime,
+                            buyerdeliveryslot,
+                            buyerdeliveryzone,
+                            buyerdeliverycity,
+                            assigntime,
+                            deliverytime,
+                            assignment_date as assignmentDate,
+                            assignment_timeslot as assignmentTimeslot,
+                            assignment_zone as assignmentZone,
+                            assignment_city as assignmentCity,
+                            assignment_seq as assignmentSeq,
+                            delivery_id as deliveryId,
+                            delivery_cost as deliveryCost,
+                            cod_cost as codCost,
+                            width,
+                            height,
+                            length,
+                            weight,
+                            actual_weight as actualWeight,
+                            delivery_type as deliveryType,
+                            currency,
+                            total_price,
+                            fixed_discount as fixedDiscount,
+                            total_discount as totalDiscount,
+                            total_tax as totalTax,
+                            chargeable_amount as chargeableAmount,
+                            delivery_bearer as deliveryBearer,
+                            cod_bearer as codBearer,
+                            cod_method as codMethod,
+                            ccod_method as ccodMethod,
+                            application_id as applicationId,
+                            application_key as applicationKey,
+                            buyer_id as buyerId,
+                            merchant_id as merchantId,
+                            merchant_trans_id as merchantTransId,
+                            toscan,
+                            pickup_status as pickupStatus,
+                            warehouse_status as warehouseStatus,
+                            warehouse_in as warehouseIn,
+                            warehouse_out as warehouseOut,
+                            courier_id as courierId,
+                            device_id as deviceId,
+                            pickup_dev_id as pickupDevId,
+                            pickup_person as pickupPerson,
+                            buyer_name as buyerName,
+                            email,
+                            recipient_name as recipientName,
+                            shipping_address as shippingAddress,
+                            shipping_zip as shippingZip,
+                            directions,
+                            dir_lat as dirLat,
+                            dir_lon as dirLon,
+                            phone,
+                            mobile1,
+                            mobile2,
+                            status,
+                            laststatus,
+                            pending_count as pendingCount,
+                            change_actor as changeActor,
+                            puchange_actor as puchangeActor,
+                            whchange_actor as whchangeActor,
+                            actor_history as actorHistory,
+                            delivery_note as deliveryNote,
+                            warehouse_note as warehouseNote,
+                            pickup_note as pickupNote,
+                            reciever_name as recieverName,
+                            reciever_picture as recieverPicture,
+                            pic_address as picAddress,
+                            pic_1 as pic1,
+                            pic_2 as pic2,
+                            pic_3 as pic3,
+                            undersign,
+                            latitude,
+                            longitude,
+                            photolatitude,
+                            photolongitude,
+                            reschedule_ref as rescheduleRef,
+                            revoke_ref as revokeRef,
+                            reattemp,
+                            show_merchant as showMerchant,
+                            show_shop as showShop,
+                            is_pickup as isPickup,
+                            is_import as isImport,
+                            is_api as isApi'
+
+                        )
                     //->where('toscan',1)
                     //->where('pickup_dev_id',$device)
                     //->where('pickup_status',$this->config->item('trans_status_tobepickup'))
@@ -1544,7 +1635,7 @@ class V2 extends REST_Controller {
                     ->get($this->config->item('incoming_delivery_table') )->result_array();
 
                     //print $this->db->last_query();
-                /*
+
                 for($i = 0; $i < count($orders);$i++){
                     $orders[$i]['actualWeight'] = (is_null($orders[$i]['actualWeight']))?0:$orders[$i]['actualWeight'];
                     $orders[$i]['totalPrice'] = (is_null($orders[$i]['totalPrice']))?0:(double)$orders[$i]['totalPrice'];
@@ -1555,7 +1646,7 @@ class V2 extends REST_Controller {
                     $orders[$i]['totalDiscount'] = (is_null($orders[$i]['totalDiscount']))?0:(double)$orders[$i]['totalDiscount'];
                     $orders[$i]['orderSrc'] = 'dashboard';
                 }
-                */
+
 
 
 
