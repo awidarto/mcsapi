@@ -1245,7 +1245,7 @@ class V2 extends REST_Controller {
                     ->group_end()
                     ->and_()
                     ->group_start()
-                        ->where('status = ',$this->config->item('trans_status_confirmed'))
+                        //->where('status = ',$this->config->item('trans_status_confirmed'))
                         ->where('pickup_status = ',$this->config->item('trans_status_tobepickup'))
                     ->group_end()
                     ->and_()
