@@ -1251,6 +1251,7 @@ class V2 extends REST_Controller {
                     ->and_()
                         ->group_start()
                             ->where('status != ',$this->config->item('trans_status_canceled'))
+                            ->where('status != ',$this->config->item('trans_status_mobile_delivered'))
                             ->where('pickup_status != ',$this->config->item('trans_status_canceled'))
                         ->group_end()
                     ->get($this->config->item('incoming_delivery_table') )->result_array();
