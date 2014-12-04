@@ -1229,10 +1229,17 @@ class V2 extends REST_Controller {
                     //->where('pickup_status',$this->config->item('trans_status_tobepickup'))
                     ->where('merchant_id',$merchant)
                     ->and_()
+                    /*
+                    ->group_start()
+                            ->like('ordertime', $date, 'after' )
+                            ->or_like('pickuptime', $date, 'after' )
+                        ->or_()
+                        */
                         ->group_start()
                             ->where('status = ',$this->config->item('trans_status_confirmed'))
                             ->where('pickup_status = ',$this->config->item('trans_status_tobepickup'))
                         ->group_end()
+                    //->group_end()
                     ->and_()
                         ->group_start()
                             ->where('status != ',$this->config->item('trans_status_canceled'))
