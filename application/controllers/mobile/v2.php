@@ -1224,7 +1224,7 @@ class V2 extends REST_Controller {
             }else{
 
             */
-                $start_date = date('Y-m-d', strtotime($date) - ( 60 * 60 * 24 * 3) );
+                $start_date = date('Y-m-d', strtotime($date) - ( 60 * 60 * 24 * 7) );
                 $end_date = $date;
                 $orders = $this->db
                     //->where('toscan',1)
