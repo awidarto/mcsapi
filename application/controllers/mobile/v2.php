@@ -1222,24 +1222,32 @@ class V2 extends REST_Controller {
                 $result = json_encode(array('status'=>'ERR:NODEVID','timestamp'=>now()));
                 print $result;
             }else{
+
             */
+                $start_date = date('Y-m-d', strtotime($date) - ( 60 * 60 * 24 * 3) );
+                $end_date = $date;
                 $orders = $this->db
                     //->where('toscan',1)
                     //->where('pickup_dev_id',$device)
                     //->where('pickup_status',$this->config->item('trans_status_tobepickup'))
                     ->where('merchant_id',$merchant)
-                    //->and_()
-                    /*
+                    ->and_()
                     ->group_start()
-                            ->like('ordertime', $date, 'after' )
-                            ->or_like('pickuptime', $date, 'after' )
+                        ->group_start()
+                            ->where('ordertime >=', $start_date)
+                            ->where('ordertime <=', $end_date)
+                        ->group_end()
                         ->or_()
-                        */
-                        //->group_start()
-                            ->where('status = ',$this->config->item('trans_status_confirmed'))
-                            ->where('pickup_status = ',$this->config->item('trans_status_tobepickup'))
-                        //->group_end()
-                    //->group_end()
+                        ->group_start()
+                            ->where('pickuptime >=', $start_date)
+                            ->where('pickuptime <=', $end_date)
+                        ->group_end()
+                    ->group_end()
+                    ->and_()
+                    ->group_start()
+                        ->where('status = ',$this->config->item('trans_status_confirmed'))
+                        ->where('pickup_status = ',$this->config->item('trans_status_tobepickup'))
+                    ->group_end()
                     ->and_()
                         ->group_start()
                             ->where('status != ',$this->config->item('trans_status_canceled'))
