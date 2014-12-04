@@ -1224,27 +1224,29 @@ class V2 extends REST_Controller {
             }else{
 
             */
-                $start_date = date('Y-m-d', strtotime($date) - ( 60 * 60 * 24 * 7) );
-                $end_date = $date;
+                $start_date = date('Y-m-d 00:00:00', strtotime($date) - ( 60 * 60 * 24 * 7) );
+                $end_date = $date.' 23:59:59';
                 $orders = $this->db
                     //->where('toscan',1)
                     //->where('pickup_dev_id',$device)
                     //->where('pickup_status',$this->config->item('trans_status_tobepickup'))
                     ->where('merchant_id',$merchant)
+                    ->where('pickup_status = ',$this->config->item('trans_status_tobepickup'))
                     ->and_()
-                    ->group_start()
+                    //->group_start()
                         ->group_start()
                             ->where('ordertime >=', $start_date)
                             ->where('ordertime <=', $end_date)
                         ->group_end()
+                        /*
                         ->or_()
                         ->group_start()
                             ->where('pickuptime >=', $start_date)
                             ->where('pickuptime <=', $end_date)
                         ->group_end()
                     ->group_end()
-                    ->and_()
-                    ->group_start()
+                    //->and_()
+                    //->group_start()
                         //->where('status = ',$this->config->item('trans_status_confirmed'))
                         ->where('pickup_status = ',$this->config->item('trans_status_tobepickup'))
                     ->group_end()
@@ -1254,6 +1256,7 @@ class V2 extends REST_Controller {
                             ->where('status != ',$this->config->item('trans_status_mobile_delivered'))
                             ->where('pickup_status != ',$this->config->item('trans_status_canceled'))
                         ->group_end()
+                    */
                     ->get($this->config->item('incoming_delivery_table') )->result_array();
 
                     //print $this->db->last_query();
