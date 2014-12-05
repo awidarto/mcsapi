@@ -83,6 +83,13 @@ $config['trans_status_admin_dispatched'] = 'dispatched';
 $config['trans_status_tobepickup'] = 'akan diambil';
 $config['trans_status_pickup'] = 'sudah diambil';
 
+$config['trans_status_atmerchant'] = 'belum di gudang';
+$config['trans_status_pu2wh'] = 'diterima di gudang';
+$config['trans_status_inwh'] = 'di gudang';
+$config['trans_status_wh2ds'] = 'di delivery';
+$config['trans_status_ds2wh'] = 'kembali di gudang';
+$config['trans_status_return2merchant'] = 'kembali ke merchant';
+
 
 /* API invalid status */
 
@@ -168,6 +175,15 @@ $config['pu_status_code'] = array(
     'pu'=>'sudah diambil',
     'wp'=>'akan diambil',
     'cp'=>'batal diambil'
+);
+
+$config['wh_status_code'] = array(
+    'bwh' => 'belum di gudang',
+    'awh' => 'diterima di gudang',
+    'dwh' => 'di gudang',
+    'dds' => 'di delivery',
+    'rwh' => 'kembali di gudang',
+    'bmc' => 'kembali ke merchant',
 );
 
 $config['fetch_method'] = array(

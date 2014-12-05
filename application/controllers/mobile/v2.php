@@ -1691,6 +1691,47 @@ class V2 extends REST_Controller {
     }
 
     public function jwstatus_get(){
+        $args = '';
+
+        $api_key = $this->get('key');
+        $trx_id = $this->get('trx');
+        $status = $this->get('status');
+        $did = $this->get('did');
+
+        $wh_stat = $this->config->item('wh_status_code');
+
+        if(is_null($api_key)){
+            //$this->response(array('status'=>'ERR:NOKEY','timestamp'=>now()),400);
+                $result = json_encode(array('status'=>'ERR:NOKEY','timestamp'=>now()));
+
+        }else if( in_array($status, array_keys($wh_stat)) == false ){
+            //$this->response(array('status'=>'ERR:INVALIDSTATUS','timestamp'=>now()),400);
+                $result = json_encode(array('status'=>'ERR:INVALIDSTATUS','timestamp'=>now()));
+
+        }else{
+
+            $pu_data = array( 'warehouse_status'=>$wh_stat[$status] );
+
+            if(isset($did) && is_null($did) == false && $did != ''){
+                //$did = base64_decode($did);
+                $this->db->where('delivery_id',trim($did))->update($this->config->item('incoming_delivery_table'), $pu_data);
+            }else if(isset($trx_id) && is_null($trx_id) == false && $trx_id != ''){
+                $trx_id = base64_decode($trx_id);
+                $this->db->where('merchant_trans_id',trim($trx_id))->update($this->config->item('incoming_delivery_table'), $pu_data);
+            }
+
+            if($this->db->affected_rows() > 0){
+                //$this->response(array('status'=>'OK:STATUSUPDATED','timestamp'=>now(),'trx'=>$trx_id ),200);
+                $result = json_encode(array('status'=>'OK:STATUSUPDATED','timestamp'=>now(),'trx'=>$trx_id));
+
+            }else{
+                //$this->response(array('status'=>'OK:STATUSUPDATEFAILED','timestamp'=>now(),'trx'=>$trx_id),200);
+                $result = json_encode(array('status'=>'OK:STATUSUPDATEFAILED','timestamp'=>now(),'trx'=>$trx_id));
+            }
+
+        }
+        header('Content-Type: application/json');
+        print $result;
 
     }
 
