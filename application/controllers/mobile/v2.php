@@ -1534,11 +1534,12 @@ class V2 extends REST_Controller {
                 $result = json_encode(array('status'=>'ERR:NODEVID','timestamp'=>now()));
                 print $result;
             }else{
-            */
+            */  $o = $this->config->item('incoming_delivery_table');
+
                 $orders = $this->db
                     ->select(
-                            'id as extId,
-                            created,
+                            $this->config->item('incoming_delivery_table').'.id as extId,
+                            '.$o.'.created,
                             ordertime,
                             pickuptime,
                             buyerdeliverytime,
@@ -1586,16 +1587,16 @@ class V2 extends REST_Controller {
                             pickup_dev_id as pickupDevId,
                             pickup_person as pickupPerson,
                             buyer_name as buyerName,
-                            email,
+                            '.$o.'.email,
                             recipient_name as recipientName,
                             shipping_address as shippingAddress,
                             shipping_zip as shippingZip,
                             directions,
                             dir_lat as dirLat,
                             dir_lon as dirLon,
-                            phone,
-                            mobile1,
-                            mobile2,
+                            '.$o.'.phone,
+                            '.$o.'.mobile1,
+                            '.$o.'.mobile2,
                             status,
                             laststatus,
                             pending_count as pendingCount,
@@ -1624,9 +1625,16 @@ class V2 extends REST_Controller {
                             show_shop as showShop,
                             is_pickup as isPickup,
                             is_import as isImport,
-                            is_api as isApi'
-
+                            is_api as isApi,
+                            m.merchantname as merchantName,
+                            d.identifier as deviceName,
+                            c.fullname as courierName'
                         )
+                    ->from($this->config->item('incoming_delivery_table'))
+                    ->join( $this->config->item('jayon_devices_table').' as d', 'd.id ='.$this->config->item('incoming_delivery_table').'.device_id', 'left'  )
+                    ->join( $this->config->item('jayon_couriers_table').' as c', 'c.id ='.$this->config->item('incoming_delivery_table').'.courier_id', 'left'  )
+                    ->join( $this->config->item('jayon_members_table').' as m', 'm.id ='.$this->config->item('incoming_delivery_table').'.merchant_id', 'left'  )
+
                     //->where('toscan',1)
                     //->where('pickup_dev_id',$device)
                     //->where('pickup_status',$this->config->item('trans_status_tobepickup'))
@@ -1646,7 +1654,7 @@ class V2 extends REST_Controller {
                             ->where('status != ',$this->config->item('trans_status_canceled'))
                             ->where('pickup_status != ',$this->config->item('trans_status_canceled'))
                         ->group_end()
-                    ->get($this->config->item('incoming_delivery_table') )->result_array();
+                    ->get( )->result_array();
 
                     //print $this->db->last_query();
 
