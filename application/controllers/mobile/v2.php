@@ -1660,12 +1660,12 @@ class V2 extends REST_Controller {
 
                 for($i = 0; $i < count($orders);$i++){
                     $orders[$i]['actualWeight'] = (is_null($orders[$i]['actualWeight']))?0:$orders[$i]['actualWeight'];
-                    $orders[$i]['totalPrice'] = (is_null($orders[$i]['totalPrice']))?0:(double)$orders[$i]['totalPrice'];
-                    $orders[$i]['codCost'] = (is_null($orders[$i]['codCost']))?0:(double)$orders[$i]['codCost'];
-                    $orders[$i]['deliveryCost'] = (is_null($orders[$i]['deliveryCost']))?0:(double)$orders[$i]['deliveryCost'];
-                    $orders[$i]['chargeableAmount'] = (is_null($orders[$i]['chargeableAmount']))?0:(double)$orders[$i]['chargeableAmount'];
-                    $orders[$i]['totalTax'] = (is_null($orders[$i]['totalTax']))?0:(double)$orders[$i]['totalTax'];
-                    $orders[$i]['totalDiscount'] = (is_null($orders[$i]['totalDiscount']))?0:(double)$orders[$i]['totalDiscount'];
+                    $orders[$i]['totalPrice'] = (is_null($orders[$i]['totalPrice']))?0:(double) $this->remove_dec($orders[$i]['totalPrice']);
+                    $orders[$i]['codCost'] = (is_null($orders[$i]['codCost']))?0:(double)$this->remove_dec($orders[$i]['codCost']);
+                    $orders[$i]['deliveryCost'] = (is_null($orders[$i]['deliveryCost']))?0:(double) $this->remove_dec($orders[$i]['deliveryCost']);
+                    $orders[$i]['chargeableAmount'] = (is_null($orders[$i]['chargeableAmount']))?0:(double)$this->remove_dec($orders[$i]['chargeableAmount']);
+                    $orders[$i]['totalTax'] = (is_null($orders[$i]['totalTax']))?0:(double)$this->remove_dec($orders[$i]['totalTax']);
+                    $orders[$i]['totalDiscount'] = (is_null($orders[$i]['totalDiscount']))?0:(double) $this->remove_dec($orders[$i]['totalDiscount']);
                     $orders[$i]['orderSrc'] = 'dashboard';
                 }
 
@@ -1869,6 +1869,16 @@ class V2 extends REST_Controller {
         else{
             return false;
         }
+    }
+
+    private function remove_dec($in){
+        $in = str_replace(',', '', $in);
+        return number_format(doubleval($in),0,'','');
+    }
+
+    public function dotest_get(){
+        $in = '899000.3';
+        print $this->remove_dec($in);
     }
 
 
