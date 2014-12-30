@@ -150,7 +150,7 @@ class V2 extends REST_Controller {
         try{
             $args = 'p='.$trx_id.':'.$did.':'.$status;
             @$this->log_access($api_key, __METHOD__ ,$result,$args);
-        }catch(Exception e){
+        }catch(Exception $e){
 
         }
 
