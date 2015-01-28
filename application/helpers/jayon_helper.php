@@ -1,4 +1,20 @@
 <?php
+
+function get_zone_by_zip($zip)
+{
+    $CI =& get_instance();
+
+    $zip = trim($zip);
+
+    $q = $CI->db->like('zips',$zip, 'both')->get('districts');
+
+    if($q->num_rows() > 0){
+        return $q->row_array();
+    }else{
+        return false;
+    }
+}
+
 function normalphone($number){
     $numbers = explode('/',$number);
     if(is_array($numbers)){

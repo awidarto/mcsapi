@@ -18,6 +18,15 @@ class V2 extends REST_Controller {
         $this->db->close();
     }
 
+    public function test_get($var = null){
+
+        if($zone = get_zone_by_zip($var) ){
+            print_r($zone);
+        }else{
+            print 'zone not found';
+        }
+    }
+
     public function test_post($id = null){
 
         $body = file_get_contents('php://input');
@@ -147,6 +156,24 @@ class V2 extends REST_Controller {
                     $is_new = true;
                 }
 
+                try{
+
+                    if( isset( $in->zip) && $in->zip != ''){
+                        if( (isset($in->buyerdeliveryzone) == false) ||
+                            is_null($in->buyerdeliveryzone) ||
+                            $in->buyerdeliveryzone == ''){
+                            if($z = get_zone_by_zip($in->zip)){
+                                $in->buyerdeliveryzone = $z['district'];
+                                $in->buyerdeliverycity = $z['city'];
+                            }
+
+                        }
+                    }
+
+                }catch(Exception $e){
+
+                }
+
                 $order['created'] = date('Y-m-d H:i:s',time());
                 $order['ordertime'] = date('Y-m-d H:i:s',time());
                 $order['pickuptime'] = date('Y-m-d H:i:s',time());
@@ -165,8 +192,8 @@ class V2 extends REST_Controller {
                 $nextdate = date('Y-m-d H:i:s',time() + (60*60*24) );
                 $order['buyerdeliverytime'] = (isset($in->buyerdeliverytime))?$in->buyerdeliverytime:$nextdate;
                 $order['buyerdeliveryslot'] = (isset($in->buyerdeliveryslot))?$in->buyerdeliveryslot:1;
-                $order['buyerdeliveryzone'] = (isset($in->buyerdeliveryzone))?$in->buyerdeliveryzone:'Pondok Aren';
-                $order['buyerdeliverycity'] = ( (isset($in->buyerdeliverycity) == false) || is_null($in->buyerdeliverycity) || $in->buyerdeliverycity == '')?'Tangerang Selatan':$in->buyerdeliverycity;
+                $order['buyerdeliveryzone'] = (isset($in->buyerdeliveryzone))?$in->buyerdeliveryzone:'Unknown';
+                $order['buyerdeliverycity'] = ( (isset($in->buyerdeliverycity) == false) || is_null($in->buyerdeliverycity) || $in->buyerdeliverycity == '')?'Unknown':$in->buyerdeliverycity;
 
                 $order['currency'] = (isset($in->currency))?$in->currency:'';
                 $order['total_price'] = (isset($in->total_price))?$in->total_price:0;
