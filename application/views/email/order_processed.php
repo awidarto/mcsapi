@@ -4,15 +4,15 @@
 
 <p>
     Delivery untuk order anda di toko <?php print $merchantname ?>
-    dengan nomor order <?php print $merchant_trx_id;?>
-    telah masuk ke sistem kami dan sedang diproses untuk pengiriman.
+    telah masuk ke sistem Jayon Express untuk proses pengiriman.
 </p>
 <p>
-    Untuk mengetahui status terkini dari proses pengiriman, silakan cek
-    melalui <a href="http://www.jayonexpress.com/m/">Delivery Tracker</a> Jayonexpress.
+
+    Untuk tracking silakan klik Jayon Express mobile tracking disini :
+    <a href="http://www.jayonexpress.com/m/">Delivery Tracker</a>, bisa melalui smartphone maupun desktop anda.
 </p>
 <p>
-    Terima kasih,
+    Terima kasih,<br />
     Jayon Express
 </p>
 </body>

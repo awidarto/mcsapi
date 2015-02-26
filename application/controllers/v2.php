@@ -388,7 +388,7 @@ class V2 extends REST_Controller {
 
                     print $result;
                 }
-
+                /*
                 try{
 
                     if($app->notify_on_new_order == 1){
@@ -410,6 +410,7 @@ class V2 extends REST_Controller {
                 }catch(Exception $e){
 
                 }
+                */
 
                 //print_r($app);
 

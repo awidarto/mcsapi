@@ -1710,6 +1710,8 @@ class V2 extends REST_Controller {
 
         $wh_stat = $this->config->item('wh_status_code');
 
+        $do_send = false;
+
         if(is_null($api_key)){
             //$this->response(array('status'=>'ERR:NOKEY','timestamp'=>now()),400);
                 $result = json_encode(array('status'=>'ERR:NOKEY','timestamp'=>now()));
@@ -1724,7 +1726,10 @@ class V2 extends REST_Controller {
 
             if(isset($did) && is_null($did) == false && $did != ''){
                 //$did = base64_decode($did);
-                $this->db->where('delivery_id',trim($did))->update($this->config->item('incoming_delivery_table'), $pu_data);
+                $do_send = $this->justarrived($did);
+
+                $this->db->where('delivery_id',trim($did))
+                    ->update($this->config->item('incoming_delivery_table'), $pu_data);
             }else if(isset($trx_id) && is_null($trx_id) == false && $trx_id != ''){
                 $trx_id = base64_decode($trx_id);
                 $this->db->where('merchant_trans_id',trim($trx_id))->update($this->config->item('incoming_delivery_table'), $pu_data);
@@ -1742,6 +1747,41 @@ class V2 extends REST_Controller {
         }
         header('Content-Type: application/json');
         print $result;
+
+        try{
+            $this->db->select($this->config->item('incoming_delivery_table').'.*,m.merchantname as merchant,a.application_name as app_name')
+                ->join('members as m',$this->config->item('incoming_delivery_table').'.merchant_id=m.id','left')
+                ->join('applications as a',$this->config->item('incoming_delivery_table').'.application_id=a.id','left')
+                ->where('delivery_id',trim($did));
+            $item = $this->db->get($this->config->item('incoming_delivery_table'));
+
+
+            if($item->num_rows() > 0){
+                $data = $item->row_array();
+
+                if($do_send){
+
+                    $app = $this->get_key_info(trim($data['application_key']));
+
+                    $nedata = array();
+                    $nedata['fullname'] = $data['buyer_name'];
+                    $nedata['merchant_trx_id'] = $data['merchant_trans_id'];
+                    $nedata['delivery_id'] = $did;
+                    $nedata['merchantname'] = $app->application_name;
+                    $nedata['app'] = $app;
+
+                    //print_r($nedata);
+
+                    if(valid_email($data['email'])){
+                        send_notification('New Delivery Order - Jayon Express COD Service',$data['email'],$app->cc_to,$app->reply_to,'order_processed',$nedata,null);
+                    }
+                }
+
+            }
+
+        }catch(Exception $e){
+
+        }
 
     }
 
@@ -1891,6 +1931,17 @@ class V2 extends REST_Controller {
         print $this->remove_dec($in);
     }
 
+    public function justarrived($delivery_id){
+        $this->db->where('delivery_id',$delivery_id)
+            ->where('warehouse_status',$this->config->item('trans_status_atmerchant'));
+        $item = $this->db->get($this->config->item('incoming_delivery_table'));
+
+        if($item->num_rows() > 0 ){
+            return true;
+        }else{
+            return false;
+        }
+    }
 
 }
 
