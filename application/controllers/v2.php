@@ -389,12 +389,33 @@ class V2 extends REST_Controller {
                     print $result;
                 }
 
+                try{
+
+                    if($app->notify_on_new_order == 1){
+                        if(valid_email($in->email)){
+                            send_notification('New Delivery Order - Jayon Express COD Service',$in->email,$app->cc_to,$app->reply_to,'order_processed',$nedata,null);
+                        }
+                    }
+
+                    if($is_new == true){
+                        $edata['fullname'] = $dataset['fullname'];
+                        $edata['username'] = $buyer_username;
+                        $edata['password'] = $password;
+                        if($app->notify_on_new_member == 1 && $in->email != 'noemail'){
+                            send_notification('New Member Registration - Jayon Express COD Service',$in->email,null,null,'new_member',$edata,null);
+                        }
+
+                    }
+
+                }catch(Exception $e){
+
+                }
 
                 //print_r($app);
 
-                if($app->notify_on_new_order == 1){
+                //if($app->notify_on_new_order == 1){
                     //@send_notification('New Delivery Order - Jayon Express COD Service',$in->email,$app->cc_to,$app->reply_to,'order_submit',$nedata,null);
-                }
+                //}
 
                 /*
                 if($is_new == true){
