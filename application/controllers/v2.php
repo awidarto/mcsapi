@@ -183,6 +183,16 @@ class V2 extends REST_Controller {
                 $order['merchant_id'] = $app->merchant_id;
                 $order['merchant_trans_id'] = trim($transaction_id);
 
+                $dupe = $this->get_dupes($app->merchant_id, $transaction_id);
+
+                if($dupe != false){
+                    $order['dupe'] = $dupe;
+                }else{
+                    $order['dupe'] = 0;
+                }
+
+
+
                 $order['buyer_name'] = (isset($in->buyer_name))?$in->buyer_name:'no name';
                 $order['recipient_name'] = (isset($in->recipient_name))?$in->recipient_name:'no name';
                 $order['email'] = (isset($in->email))?$in->email:'noemail';
@@ -208,6 +218,10 @@ class V2 extends REST_Controller {
                 $order['mobile1'] = $in->mobile1;
                 $order['mobile2'] = $in->mobile2;
                 $order['status'] = (isset($in->status))?$in->status:'pending';
+
+                if($dupe > 0 ){
+                    $order['status'] = $this->config->item('trans_status_canceled');
+                }
 
                 $order['width'] = (isset($in->width))?$in->width:0;
                 $order['height'] = (isset($in->height))?$in->height:0;
@@ -967,6 +981,22 @@ class V2 extends REST_Controller {
 
 
     //private supporting functions
+
+    private function get_dupes($mid, $inv){
+        if(!is_null($inv)){
+            $this->db->where('merchant_id',$mid);
+            $this->db->where('merchant_trans_id',$inv);
+            $result = $this->db->count_all_results($this->config->item('incoming_delivery_table'));
+
+            if($result > 0){
+                return $result;
+            }else{
+                return false;
+            }
+        }else{
+            return false;
+        }
+    }
 
     private function get_key_info($key){
         if(!is_null($key)){
