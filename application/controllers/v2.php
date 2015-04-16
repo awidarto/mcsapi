@@ -653,7 +653,16 @@ class V2 extends REST_Controller {
         if(is_null($api_key) || $api_key == ''){
             $this->response(array('status'=>'ERR:NOKEY','timestamp'=>now()),400);
         }else{
-            $app = $this->get_key_info(trim($api_key));
+
+            $vendor_keys = $this->config->item('vendor_keys');
+
+            $app = $vendor_keys[trim($api_key)];
+
+            if( is_array($app) && isset($app['key']) && $app['key'] == $api_key ){
+
+            }else{
+                $app = false;
+            }
 
             if($app == false){
                 $this->response(array('status'=>'ERR:INVALIDKEY','timestamp'=>now()),400);
@@ -672,7 +681,7 @@ class V2 extends REST_Controller {
                     $trxstatus = $this->db
                         ->from($this->config->item('assigned_delivery_table'))
                         ->where('merchant_trans_id',$trx_id)
-                        ->where('application_key',$app->key)
+                        //->where('application_key',$app['key'])
                         ->get();
 
                     if($trxstatus->num_rows() > 0){
@@ -695,7 +704,7 @@ class V2 extends REST_Controller {
                     $deliverystatus = $this->db
                         ->from($this->config->item('assigned_delivery_table'))
                         ->where('delivery_id',$delivery_id)
-                        ->where('application_key',$app->key)
+                        //->where('application_key',$app['key'])
                         ->get();
 
                     if($deliverystatus->num_rows() > 0){
