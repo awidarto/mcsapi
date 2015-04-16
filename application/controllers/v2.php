@@ -720,8 +720,8 @@ class V2 extends REST_Controller {
                     $delivery_id = false;
                 }
 
-                if($trxstatus == false && $delivery_id == false){
-                    $result = json_encode(array('status'=>'OK:UNSPECIFIEDCODE','timestamp'=>now()));
+                if($trx_id == false && $delivery_id == false){
+                    $result = json_encode( array( 'status'=>'OK:UNSPECIFIEDCODE','timestamp'=>now() ) );
                 }else{
                     $result = json_encode(array('status'=>'OK:STATUSRETRIEVED','timestamp'=>now(),'trx'=>$trxstatus,'did'=>$deliverystatus));
                 }
