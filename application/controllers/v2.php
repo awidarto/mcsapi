@@ -632,6 +632,102 @@ class V2 extends REST_Controller {
         $this->response(array('message'=>'Not Implemented'),400);
     }
 
+    public function vendororderstatus_get(){
+        $api_key = $this->get('key');
+        $trx_id = $this->get('trx');
+        $delivery_id = $this->get('did');
+        $encoding = $this->get('enc'); // plain or base64
+
+        $chg = $this->get('chg'); //cancel & confirm
+
+        $args = array(
+            'api_key' => $this->get('key'),
+            'trx_id' => $this->get('trx'),
+            'delivery_id' => $this->get('did'),
+            'encoding' => $this->get('enc'), // plain or base64
+            'chg' => $this->get('chg') //cancel & confirm
+        );
+
+        $encoding = (!isset($encoding) || $encoding == '')? 'plain':$encoding;
+
+        if(is_null($api_key) || $api_key == ''){
+            $this->response(array('status'=>'ERR:NOKEY','timestamp'=>now()),400);
+        }else{
+            $app = $this->get_key_info(trim($api_key));
+
+            if($app == false){
+                $this->response(array('status'=>'ERR:INVALIDKEY','timestamp'=>now()),400);
+            }else{
+
+                $trx = array();
+
+                $did = array();
+
+                if(isset($trx_id) && $trx_id != ''){
+
+                    if($encoding == 'base64'){
+                        $trx_id = base64_decode($trx_id);
+                    }
+
+                    $trxstatus = $this->db
+                        ->from($this->config->item('assigned_delivery_table'))
+                        ->where('merchant_trans_id',$trx_id)
+                        ->where('application_key',$app->key)
+                        ->get();
+
+                    if($trxstatus->num_rows() > 0){
+                        $trxstatus = $trxstatus->row_array();
+                        $trxstatus = array($trx_id=>$trxstatus['status']);
+                    }else{
+                        $trxstatus = array($trx_id=>null);
+                    }
+
+                }
+
+                //$config['trans_status_confirmed'] = 'confirmed';
+                //$config['trans_status_canceled'] = 'canceled';
+
+                if(isset($delivery_id) && $delivery_id != ''){
+                    if($encoding == 'base64'){
+                        $delivery_id = base64_decode($delivery_id);
+                    }
+
+                    $deliverystatus = $this->db
+                        ->from($this->config->item('assigned_delivery_table'))
+                        ->where('delivery_id',$delivery_id)
+                        ->where('application_key',$app->key)
+                        ->get();
+
+                    if($deliverystatus->num_rows() > 0){
+                        $deliverystatus = $deliverystatus->row_array();
+                        $deliverystatus = array($delivery_id=>$deliverystatus['status']);
+                    }else{
+                        $deliverystatus = array($delivery_id=>null);
+                    }
+
+                }
+
+                $result = json_encode(array('status'=>'OK:STATUSRETRIEVED','timestamp'=>now(),'trx'=>$trxstatus,'did'=>$deliverystatus));
+
+                print $result;
+
+                $args = implode('/',$args);
+                $this->log_access($api_key, __METHOD__ ,$result,$args);
+
+            }
+
+        }
+
+    }
+
+    public function vendororderstatus_post(){
+        $this->response(array('message'=>'Not Implemented'),400);
+    }
+
+    public function vendororderstatus_put(){
+        $this->response(array('message'=>'Not Implemented'),400);
+    }
+
     function orderstatus_get(){
         $api_key = $this->get('key');
         $trx_id = $this->get('trx');
