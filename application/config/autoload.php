@@ -80,7 +80,7 @@ $autoload['helper'] = array('asset','date','jayon','string','dompdf');
 |
 */
 
-$autoload['config'] = array('jayon','oi','gc_qrcode');
+$autoload['config'] = array('jayon','oi','gc_qrcode','vendor');
 
 
 /*
