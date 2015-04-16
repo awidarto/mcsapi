@@ -691,6 +691,8 @@ class V2 extends REST_Controller {
                         $trxstatus = array($trx_id=>null);
                     }
 
+                }else{
+                    $trx_id = false;
                 }
 
                 //$config['trans_status_confirmed'] = 'confirmed';
@@ -714,9 +716,15 @@ class V2 extends REST_Controller {
                         $deliverystatus = array($delivery_id=>null);
                     }
 
+                }else{
+                    $delivery_id = false;
                 }
 
-                $result = json_encode(array('status'=>'OK:STATUSRETRIEVED','timestamp'=>now(),'trx'=>$trxstatus,'did'=>$deliverystatus));
+                if($trxstatus == false && $delivery_id == false){
+                    $result = json_encode(array('status'=>'OK:UNSPECIFIEDCODE','timestamp'=>now()));
+                }else{
+                    $result = json_encode(array('status'=>'OK:STATUSRETRIEVED','timestamp'=>now(),'trx'=>$trxstatus,'did'=>$deliverystatus));
+                }
 
                 print $result;
 
