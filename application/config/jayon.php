@@ -232,10 +232,10 @@ if($_SERVER['HTTP_HOST'] == 'localhost'){
     $config['pusign_path'] = '/var/www/pro/jayonadmin/public/pickup_sign/';
 }else{
 	//online version should redirect to main site
-	$config['public_path'] = '/var/www/pro/jayonadmin/public/';
-	$config['picture_path'] = '/var/www/pro/jayonadmin/public/receiver/';
-	$config['thumbnail_path'] = '/var/www/pro/jayonadmin/public/receiver_thumb/';
-    $config['pusign_path'] = '/var/www/pro/jayonadmin/public/pickup_sign/';
+	$config['public_path'] = '/var/jex/demo/demo/admin/public/';
+	$config['picture_path'] = '/var/jex/demo/demo/admin/public/receiver/';
+	$config['thumbnail_path'] = '/var/jex/demo/demo/admin/public/receiver_thumb/';
+    $config['pusign_path'] = '/var/jex/demo/demo/admin/public/pickup_sign/';
 }
 
 ?>
